@@ -1,0 +1,330 @@
+"use client"
+
+import type React from "react"
+import { useState, useEffect, useRef } from "react"
+
+export function OrbitalClock() {
+  const [time, setTime] = useState(new Date())
+  const [isHovered, setIsHovered] = useState(false)
+  const [mousePos, setMousePos] = useState({ x: 0, y: 0 })
+  const containerRef = useRef<HTMLDivElement>(null)
+
+  const days = ["SUN", "MON", "TUE", "WED", "THU", "FRI", "SAT"]
+  const months = ["JAN", "FEB", "MAR", "APR", "MAY", "JUN", "JUL", "AUG", "SEP", "OCT", "NOV", "DEC"]
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setTime(new Date())
+    }, 1000)
+    return () => clearInterval(interval)
+  }, [])
+
+  const handleMouseMove = (e: React.MouseEvent) => {
+    if (!containerRef.current) return
+    const rect = containerRef.current.getBoundingClientRect()
+    const x = (e.clientX - rect.left - rect.width / 2) / (rect.width / 2)
+    const y = (e.clientY - rect.top - rect.height / 2) / (rect.height / 2)
+    setMousePos({ x: x * 5, y: y * 5 })
+  }
+
+  // Current values
+  const currentDayOfMonth = time.getDate()
+  const currentDayOfWeek = time.getDay()
+  const currentMonth = time.getMonth()
+  const currentHour = time.getHours() % 12
+  const currentMinute = time.getMinutes()
+  const currentSecond = time.getSeconds()
+
+  // Calculate rotations
+  const dayOfMonthDeg = ((currentDayOfMonth - 1) / 31) * 360
+  const dayOfWeekDeg = (currentDayOfWeek / 7) * 360
+  const monthDeg = (currentMonth / 12) * 360
+  const hourDeg = (currentHour / 12) * 360 + (currentMinute / 60) * 30
+  const minuteDeg = (currentMinute / 60) * 360 + (currentSecond / 60) * 6
+  const secondDeg = (currentSecond / 60) * 360
+
+  const formatFullDate = () => {
+    return time.toLocaleDateString("en-US", {
+      weekday: "long",
+      month: "long",
+      day: "numeric",
+      year: "numeric",
+    })
+  }
+
+  const formatTime = () => {
+    return time.toLocaleTimeString("en-US", {
+      hour: "numeric",
+      minute: "2-digit",
+      hour12: true,
+    })
+  }
+
+  const size = 700
+  const center = size / 2
+  
+  // Ring radii
+  const outerRadius = 310
+  const middleRadius = 230
+  const innerRadius = 150
+
+  // Create arc path starting from RIGHT (3 o'clock) going clockwise
+  // This puts the top (12 o'clock) at 25% offset, far from path boundaries
+  const createCirclePath = (radius: number) => {
+    return `
+      M ${center + radius} ${center}
+      A ${radius} ${radius} 0 1 1 ${center - radius} ${center}
+      A ${radius} ${radius} 0 1 1 ${center + radius} ${center}
+    `
+  }
+
+  return (
+    <div
+      ref={containerRef}
+      className="relative cursor-pointer select-none text-white"
+      onMouseEnter={() => setIsHovered(true)}
+      onMouseLeave={() => {
+        setIsHovered(false)
+        setMousePos({ x: 0, y: 0 })
+      }}
+      onMouseMove={handleMouseMove}
+      style={{ perspective: "800px" }}
+    >
+      <div
+        className="relative transition-transform duration-300 ease-out"
+        style={{
+          width: size,
+          height: size,
+          transform: `rotateX(${-mousePos.y}deg) rotateY(${mousePos.x}deg)`,
+        }}
+      >
+        {/* Subtle outer glow on hover */}
+        <div
+          className="absolute inset-0 rounded-full transition-all duration-700"
+          style={{
+            background: isHovered
+              ? "radial-gradient(circle, rgba(34,197,94,0.15) 0%, transparent 60%)"
+              : "transparent",
+            transform: isHovered ? "scale(1.15)" : "scale(1)",
+          }}
+        />
+
+        {/* SVG Clock Face */}
+        <svg
+          width={size}
+          height={size}
+          viewBox={`0 0 ${size} ${size}`}
+          style={{ fontFamily: "'Helvetica Neue', 'Arial', sans-serif" }}
+        >
+          <defs>
+            {/* Full circle paths for text */}
+            <path
+              id="outerCircle"
+              d={createCirclePath(outerRadius)}
+              fill="none"
+            />
+            <path
+              id="middleCircle"
+              d={createCirclePath(middleRadius)}
+              fill="none"
+            />
+            <path
+              id="innerCircle"
+              d={createCirclePath(innerRadius)}
+              fill="none"
+            />
+            
+            {/* Gradients */}
+            <linearGradient id="whiteHandGradient" x1="0%" y1="100%" x2="0%" y2="0%">
+              <stop offset="0%" stopColor="rgba(255,255,255,0.15)" />
+              <stop offset="100%" stopColor="rgba(255,255,255,0.9)" />
+            </linearGradient>
+            <linearGradient id="grayHandGradient" x1="0%" y1="100%" x2="0%" y2="0%">
+              <stop offset="0%" stopColor="rgba(150,150,150,0.2)" />
+              <stop offset="100%" stopColor="rgba(200,200,200,0.6)" />
+            </linearGradient>
+            <linearGradient id="greenHandGradient" x1="0%" y1="100%" x2="0%" y2="0%">
+              <stop offset="0%" stopColor="rgba(34,197,94,0.2)" />
+              <stop offset="100%" stopColor="rgb(34,197,94)" />
+            </linearGradient>
+            <linearGradient id="minuteHandGradient" x1="0%" y1="100%" x2="0%" y2="0%">
+              <stop offset="0%" stopColor="rgba(255,255,255,0.1)" />
+              <stop offset="100%" stopColor="rgba(255,255,255,0.85)" />
+            </linearGradient>
+            <linearGradient id="secondHandGradient" x1="0%" y1="100%" x2="0%" y2="0%">
+              <stop offset="0%" stopColor="rgba(239,68,68,0.3)" />
+              <stop offset="100%" stopColor="rgb(239,68,68)" />
+            </linearGradient>
+            <radialGradient id="centerGradient">
+              <stop offset="30%" stopColor="rgb(34,197,94)" />
+              <stop offset="100%" stopColor="rgba(34,197,94,0.6)" />
+            </radialGradient>
+            
+            {/* Glow filter */}
+            <filter id="glow" x="-50%" y="-50%" width="200%" height="200%">
+              <feGaussianBlur stdDeviation="2" result="coloredBlur"/>
+              <feMerge>
+                <feMergeNode in="coloredBlur"/>
+                <feMergeNode in="SourceGraphic"/>
+              </feMerge>
+            </filter>
+          </defs>
+
+          {/* OUTER RING: Days of the month (1-31) on curved path */}
+          {Array.from({ length: 31 }, (_, i) => {
+            const day = i + 1
+            const isActive = currentDayOfMonth === day
+            // Path starts at 3 o'clock, so 75% is 12 o'clock (top)
+            // Wrap around using modulo to stay within 0-100%
+            const offsetPercent = (75 + (i / 31) * 100) % 100
+            
+            return (
+              <text
+                key={`day-${day}`}
+                fontSize="36"
+                fontWeight="700"
+                fill={isActive ? "#ffffff" : "rgba(255,255,255,0.6)"}
+                filter={isActive ? "url(#glow)" : undefined}
+              >
+                <textPath
+                  href="#outerCircle"
+                  startOffset={`${offsetPercent}%`}
+                  textAnchor="middle"
+                >
+                  {day}
+                </textPath>
+              </text>
+            )
+          })}
+
+          {/* MIDDLE RING: Months on curved path */}
+          {months.map((month, i) => {
+            const isActive = currentMonth === i
+            // Path starts at 3 o'clock, so 75% is 12 o'clock (top)
+            const offsetPercent = (75 + (i / 12) * 100) % 100
+            
+            return (
+              <text
+                key={`month-${i}`}
+                fontSize="36"
+                fontWeight="700"
+                fill={isActive ? "#ffffff" : "rgba(255,255,255,0.5)"}
+                filter={isActive ? "url(#glow)" : undefined}
+              >
+                <textPath
+                  href="#middleCircle"
+                  startOffset={`${offsetPercent}%`}
+                  textAnchor="middle"
+                >
+                  {month}
+                </textPath>
+              </text>
+            )
+          })}
+
+          {/* INNER RING: Days of the week on curved path */}
+          {days.map((day, i) => {
+            const isActive = currentDayOfWeek === i
+            // Path starts at 3 o'clock, so 75% is 12 o'clock (top)
+            const offsetPercent = (75 + (i / 7) * 100) % 100
+            
+            return (
+              <text
+                key={`weekday-${i}`}
+                fontSize="36"
+                fontWeight="700"
+                fill={isActive ? "#34d399" : "rgba(255,255,255,0.4)"}
+                filter={isActive ? "url(#glow)" : undefined}
+              >
+                <textPath
+                  href="#innerCircle"
+                  startOffset={`${offsetPercent}%`}
+                  textAnchor="middle"
+                >
+                  {day}
+                </textPath>
+              </text>
+            )
+          })}
+
+          {/* Clock hands */}
+          <g>
+            {/* LONG HAND - Points to Days of Month (outer ring) - White */}
+            <line
+              x1={center}
+              y1={center + 40}
+              x2={center}
+              y2={center - outerRadius + 60}
+              stroke="#ffffff"
+              strokeWidth="4"
+              strokeLinecap="round"
+              style={{ filter: "drop-shadow(0 0 4px rgba(255,255,255,0.5))" }}
+              transform={`rotate(${dayOfMonthDeg} ${center} ${center})`}
+            />
+
+            {/* MEDIUM HAND - Points to Months (middle ring) - Light gray */}
+            <line
+              x1={center}
+              y1={center + 30}
+              x2={center}
+              y2={center - middleRadius + 50}
+              stroke="#aaaaaa"
+              strokeWidth="5"
+              strokeLinecap="round"
+              style={{ filter: "drop-shadow(0 0 3px rgba(170,170,170,0.5))" }}
+              transform={`rotate(${monthDeg} ${center} ${center})`}
+            />
+
+            {/* SHORT HAND - Points to Days of Week (inner ring) - Lime Green */}
+            <line
+              x1={center}
+              y1={center + 20}
+              x2={center}
+              y2={center - innerRadius + 40}
+              stroke="#22c55e"
+              strokeWidth="6"
+              strokeLinecap="round"
+              style={{ filter: "drop-shadow(0 0 6px rgba(34,197,94,0.8))" }}
+              transform={`rotate(${dayOfWeekDeg} ${center} ${center})`}
+            />
+
+            {/* Center hub */}
+            <circle
+              cx={center}
+              cy={center}
+              r="14"
+              fill="#22c55e"
+              stroke="rgba(255,255,255,0.5)"
+              strokeWidth="3"
+            />
+
+            {/* Inner center dot */}
+            <circle
+              cx={center}
+              cy={center}
+              r="6"
+              fill="white"
+            />
+          </g>
+        </svg>
+      </div>
+
+      {/* Info panel on hover */}
+      <div
+        className="absolute w-full flex flex-col items-center justify-center left-0 transition-all duration-500"
+        style={{
+          bottom: -60,
+          opacity: isHovered ? 1 : 0,
+          transform: `translateY(${isHovered ? 0 : -10}px)`,
+        }}
+      >
+        <span className="text-emerald-400 font-medium text-sm tracking-wide">
+          {formatTime()}
+        </span>
+        <span className="text-white/60 text-[10px] tracking-[0.2em] uppercase mt-1">
+          {formatFullDate()}
+        </span>
+      </div>
+    </div>
+  )
+}
