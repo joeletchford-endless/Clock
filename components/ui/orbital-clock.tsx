@@ -1,13 +1,9 @@
 "use client"
 
-import type React from "react"
-import { useState, useEffect, useRef } from "react"
+import { useState, useEffect } from "react"
 
 export function OrbitalClock() {
   const [time, setTime] = useState(new Date())
-  const [isHovered, setIsHovered] = useState(false)
-  const [mousePos, setMousePos] = useState({ x: 0, y: 0 })
-  const containerRef = useRef<HTMLDivElement>(null)
 
   const days = ["SUN", "MON", "TUE", "WED", "THU", "FRI", "SAT"]
   const months = ["JAN", "FEB", "MAR", "APR", "MAY", "JUN", "JUL", "AUG", "SEP", "OCT", "NOV", "DEC"]
@@ -18,14 +14,6 @@ export function OrbitalClock() {
     }, 1000)
     return () => clearInterval(interval)
   }, [])
-
-  const handleMouseMove = (e: React.MouseEvent) => {
-    if (!containerRef.current) return
-    const rect = containerRef.current.getBoundingClientRect()
-    const x = (e.clientX - rect.left - rect.width / 2) / (rect.width / 2)
-    const y = (e.clientY - rect.top - rect.height / 2) / (rect.height / 2)
-    setMousePos({ x: x * 5, y: y * 5 })
-  }
 
   // Current values
   const currentDayOfMonth = time.getDate()
@@ -80,34 +68,12 @@ export function OrbitalClock() {
 
   return (
     <div
-      ref={containerRef}
-      className="relative cursor-pointer select-none text-white"
-      onMouseEnter={() => setIsHovered(true)}
-      onMouseLeave={() => {
-        setIsHovered(false)
-        setMousePos({ x: 0, y: 0 })
+      className="relative select-none text-white"
+      style={{
+        width: size,
+        height: size,
       }}
-      onMouseMove={handleMouseMove}
-      style={{ perspective: "800px" }}
     >
-      <div
-        className="relative transition-transform duration-300 ease-out"
-        style={{
-          width: size,
-          height: size,
-          transform: `rotateX(${-mousePos.y}deg) rotateY(${mousePos.x}deg)`,
-        }}
-      >
-        {/* Subtle outer glow on hover */}
-        <div
-          className="absolute inset-0 rounded-full transition-all duration-700"
-          style={{
-            background: isHovered
-              ? "radial-gradient(circle, rgba(34,197,94,0.15) 0%, transparent 60%)"
-              : "transparent",
-            transform: isHovered ? "scale(1.15)" : "scale(1)",
-          }}
-        />
 
         {/* SVG Clock Face */}
         <svg
@@ -145,7 +111,7 @@ export function OrbitalClock() {
             </linearGradient>
             <linearGradient id="greenHandGradient" x1="0%" y1="100%" x2="0%" y2="0%">
               <stop offset="0%" stopColor="rgba(34,197,94,0.2)" />
-              <stop offset="100%" stopColor="rgb(34,197,94)" />
+              <stop offset="100%" stopColor="#00FF6F" />
             </linearGradient>
             <linearGradient id="minuteHandGradient" x1="0%" y1="100%" x2="0%" y2="0%">
               <stop offset="0%" stopColor="rgba(255,255,255,0.1)" />
@@ -156,18 +122,9 @@ export function OrbitalClock() {
               <stop offset="100%" stopColor="rgb(239,68,68)" />
             </linearGradient>
             <radialGradient id="centerGradient">
-              <stop offset="30%" stopColor="rgb(34,197,94)" />
+              <stop offset="30%" stopColor="#00FF6F" />
               <stop offset="100%" stopColor="rgba(34,197,94,0.6)" />
             </radialGradient>
-            
-            {/* Glow filter */}
-            <filter id="glow" x="-50%" y="-50%" width="200%" height="200%">
-              <feGaussianBlur stdDeviation="2" result="coloredBlur"/>
-              <feMerge>
-                <feMergeNode in="coloredBlur"/>
-                <feMergeNode in="SourceGraphic"/>
-              </feMerge>
-            </filter>
           </defs>
 
           {/* OUTER RING: Days of the month (1-31) on curved path */}
@@ -184,7 +141,6 @@ export function OrbitalClock() {
                 fontSize="36"
                 fontWeight="700"
                 fill={isActive ? "#ffffff" : "rgba(255,255,255,0.6)"}
-                filter={isActive ? "url(#glow)" : undefined}
               >
                 <textPath
                   href="#outerCircle"
@@ -209,7 +165,6 @@ export function OrbitalClock() {
                 fontSize="36"
                 fontWeight="700"
                 fill={isActive ? "#ffffff" : "rgba(255,255,255,0.5)"}
-                filter={isActive ? "url(#glow)" : undefined}
               >
                 <textPath
                   href="#middleCircle"
@@ -233,8 +188,7 @@ export function OrbitalClock() {
                 key={`weekday-${i}`}
                 fontSize="36"
                 fontWeight="700"
-                fill={isActive ? "#34d399" : "rgba(255,255,255,0.4)"}
-                filter={isActive ? "url(#glow)" : undefined}
+                fill={isActive ? "#00FF6F" : "rgba(255,255,255,0.4)"}
               >
                 <textPath
                   href="#innerCircle"
@@ -252,39 +206,36 @@ export function OrbitalClock() {
             {/* LONG HAND - Points to Days of Month (outer ring) - White */}
             <line
               x1={center}
-              y1={center + 40}
+              y1={center}
               x2={center}
-              y2={center - outerRadius + 60}
+              y2={center - outerRadius + 30}
               stroke="#ffffff"
               strokeWidth="4"
-              strokeLinecap="round"
-              style={{ filter: "drop-shadow(0 0 4px rgba(255,255,255,0.5))" }}
+              strokeLinecap="butt"
               transform={`rotate(${dayOfMonthDeg} ${center} ${center})`}
             />
 
             {/* MEDIUM HAND - Points to Months (middle ring) - Light gray */}
             <line
               x1={center}
-              y1={center + 30}
+              y1={center }
               x2={center}
-              y2={center - middleRadius + 50}
-              stroke="#aaaaaa"
-              strokeWidth="5"
-              strokeLinecap="round"
-              style={{ filter: "drop-shadow(0 0 3px rgba(170,170,170,0.5))" }}
+              y2={center - middleRadius + 30}
+              stroke="white"
+              strokeWidth="6"
+              strokeLinecap="butt"
               transform={`rotate(${monthDeg} ${center} ${center})`}
             />
 
             {/* SHORT HAND - Points to Days of Week (inner ring) - Lime Green */}
             <line
               x1={center}
-              y1={center + 20}
+              y1={center}
               x2={center}
-              y2={center - innerRadius + 40}
-              stroke="#22c55e"
+              y2={center - innerRadius + 30}
+              stroke="#00FF6F"
               strokeWidth="6"
-              strokeLinecap="round"
-              style={{ filter: "drop-shadow(0 0 6px rgba(34,197,94,0.8))" }}
+              strokeLinecap="butt"
               transform={`rotate(${dayOfWeekDeg} ${center} ${center})`}
             />
 
@@ -293,8 +244,8 @@ export function OrbitalClock() {
               cx={center}
               cy={center}
               r="14"
-              fill="#22c55e"
-              stroke="rgba(255,255,255,0.5)"
+              fill="white"
+          
               strokeWidth="3"
             />
 
@@ -303,28 +254,10 @@ export function OrbitalClock() {
               cx={center}
               cy={center}
               r="6"
-              fill="white"
+              fill="#00FF6F"
             />
           </g>
         </svg>
-      </div>
-
-      {/* Info panel on hover */}
-      <div
-        className="absolute w-full flex flex-col items-center justify-center left-0 transition-all duration-500"
-        style={{
-          bottom: -60,
-          opacity: isHovered ? 1 : 0,
-          transform: `translateY(${isHovered ? 0 : -10}px)`,
-        }}
-      >
-        <span className="text-emerald-400 font-medium text-sm tracking-wide">
-          {formatTime()}
-        </span>
-        <span className="text-white/60 text-[10px] tracking-[0.2em] uppercase mt-1">
-          {formatFullDate()}
-        </span>
-      </div>
     </div>
   )
 }
