@@ -144,7 +144,7 @@ export function HeroSection() {
       }}
     >
       {/* Large ENDLESS SVG - letter paths animated */}
-      <div className="pt-6 px-6 w-full overflow-hidden">
+      <div className="px-6 w-full overflow-hidden" style={{ paddingTop: 24, paddingBottom: 24 }}>
         <svg 
           ref={svgRef}
           viewBox="0 0 1392 249" 

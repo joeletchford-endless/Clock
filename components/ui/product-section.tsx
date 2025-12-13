@@ -92,18 +92,26 @@ function ProductCard({ product }: { product: Product }) {
 
       {/* Description */}
       <div className="flex flex-col gap-1">
-        <p 
-          className={`text-sm leading-relaxed ${expanded ? "" : "line-clamp-5"}`}
-          style={{ color: "#000000" }}
+        <div 
+          className="overflow-hidden"
+          style={{ 
+            maxHeight: expanded ? "500px" : "72px",
+            transition: "max-height 0.4s cubic-bezier(0.4, 0, 0.2, 1)",
+          }}
         >
-          {product.details}
-        </p>
+          <p 
+            className="text-sm leading-relaxed"
+            style={{ color: "#000000", lineHeight: "18px" }}
+          >
+            {product.details}
+          </p>
+        </div>
         <button 
           onClick={() => setExpanded(!expanded)}
           className="text-sm text-left hover:opacity-70 transition-opacity"
           style={{ color: "rgba(0, 0, 0, 0.25)" }}
         >
-          {expanded ? "Show less" : "Read more"}
+          {expanded ? "Read less" : "Read more"}
         </button>
       </div>
 
@@ -172,14 +180,10 @@ function ProductCard({ product }: { product: Product }) {
 
           {/* Add to Cart Button */}
           <button 
-            className="flex-1 flex items-center justify-center gap-2 p-3 hover:bg-black hover:text-white transition-colors"
-            style={{ 
-              border: "0.5px solid #000000",
-              color: "#000000"
-            }}
+            className="flex-1 flex items-center justify-center gap-2 p-3 bg-transparent hover:bg-black border border-black transition-all duration-300 group"
           >
-            <span>Add to cart</span>
-            <span>${product.price.toFixed(2)}</span>
+            <span className="text-black group-hover:text-white transition-colors duration-300">Add to cart</span>
+            <span className="text-black group-hover:text-white transition-colors duration-300">${product.price.toFixed(2)}</span>
           </button>
         </div>
       </div>
@@ -193,28 +197,30 @@ export function ProductSection() {
       className="w-full"
       style={{ 
         background: "#f4f4ed",
-        fontFamily: "'Helvetica Neue', 'Arial', sans-serif"
+        fontFamily: "'Helvetica Neue', 'Arial', sans-serif",
+        paddingTop: 64,
+        paddingBottom: 64,
+        paddingLeft: 24,
+        paddingRight: 24
       }}
     >
-      <div style={{ padding: 25 }}>
-        {/* Header */}
-        <div className="flex items-center justify-center py-24 md:py-36 lg:py-44">
-          <h2 
-            className="text-2xl md:text-3xl lg:text-4xl font-bold uppercase text-center max-w-2xl"
-            style={{ color: "#000000" }}
-          >
-            <span>Pre-orders </span>
-            <span style={{ color: "rgba(0, 0, 0, 0.25)" }}>for the 2026 launch </span>
-            <span>now open</span>
-          </h2>
-        </div>
+      {/* Header */}
+      <div className="flex items-center justify-center" style={{ paddingBottom: 64 }}>
+        <h2 
+          className="text-2xl md:text-3xl lg:text-4xl font-bold uppercase text-center max-w-2xl"
+          style={{ color: "#000000" }}
+        >
+          <span>Pre-orders </span>
+          <span style={{ color: "rgba(0, 0, 0, 0.25)" }}>for the 2026 launch </span>
+          <span>now open</span>
+        </h2>
+      </div>
 
-        {/* Product Cards */}
-        <div className="flex flex-col lg:flex-row gap-6 pb-24 md:pb-36 lg:pb-44">
-          {products.map((product) => (
-            <ProductCard key={product.id} product={product} />
-          ))}
-        </div>
+      {/* Product Cards */}
+      <div className="flex flex-col lg:flex-row gap-6">
+        {products.map((product) => (
+          <ProductCard key={product.id} product={product} />
+        ))}
       </div>
     </section>
   )

@@ -162,7 +162,7 @@ export function FooterSection() {
       {/* Clock Section - 3 Column Grid on desktop, 2 Column on tablet */}
       <div 
         className="w-full grid grid-cols-2 lg:grid-cols-3"
-        style={{ paddingTop: 36, paddingBottom: 36, gap: 24 }}
+        style={{ paddingTop: 64, paddingBottom: 32, gap: 24 }}
       >
         {/* Left Clock - Hours & Days of Week */}
         <ResponsiveClockWrapper>
@@ -185,7 +185,7 @@ export function FooterSection() {
       {/* Bottom Content - 12 Column Grid */}
       <div 
         className="w-full grid grid-cols-4 md:grid-cols-12"
-        style={{ gap: 24, paddingTop: 24, paddingBottom: 24 }}
+        style={{ gap: 24, paddingTop: 32, paddingBottom: 24 }}
       >
         {/* Address + Copyright (cols 1-2) */}
         <div className="col-span-2 md:col-span-2 flex flex-col justify-between text-sm leading-relaxed">
