@@ -798,6 +798,12 @@ video {
   -webkit-box-orient: vertical;
   -webkit-line-clamp: 4;
 }
+.line-clamp-5 {
+  overflow: hidden;
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 5;
+}
 .block {
   display: block;
 }
@@ -852,6 +858,9 @@ video {
 .h-screen {
   height: 100vh;
 }
+.h-\[350px\] {
+  height: 350px;
+}
 .min-h-screen {
   min-height: 100vh;
 }
@@ -896,6 +905,9 @@ video {
 }
 .w-\[1\.5px\] {
   width: 1.5px;
+}
+.w-\[212px\] {
+  width: 212px;
 }
 .max-w-\[500px\] {
   max-width: 500px;
@@ -1265,6 +1277,9 @@ video {
 }
 .pb-9 {
   padding-bottom: 2.25rem;
+}
+.pl-4 {
+  padding-left: 1rem;
 }
 .text-left {
   text-align: left;
