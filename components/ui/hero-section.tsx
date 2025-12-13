@@ -106,7 +106,7 @@ function AnimatedParagraph({ text, delay }: { text: string; delay: number }) {
   return (
     <p 
       ref={ref}
-      className="text-base leading-tight"
+      className="text-xs leading-tight"
       style={{ color: "#000000", minHeight: "1em" }}
     />
   )

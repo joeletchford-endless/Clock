@@ -1,7 +1,135 @@
 "use client"
 
-import { useState } from "react"
+import { useState, useRef, useEffect } from "react"
 import { OrbitalClock } from "./orbital-clock"
+import { HourDayClock } from "./hour-day-clock"
+import { AnimatedLink } from "./animated-link"
+
+// Responsive clock wrapper that scales content to fit container
+function ResponsiveClockWrapper({ children }: { children: React.ReactNode }) {
+  const containerRef = useRef<HTMLDivElement>(null)
+  const [scale, setScale] = useState(1)
+
+  useEffect(() => {
+    const updateScale = () => {
+      if (containerRef.current) {
+        const containerWidth = containerRef.current.offsetWidth
+        setScale(containerWidth / 700) // 700 is the clock's native size
+      }
+    }
+
+    updateScale()
+    window.addEventListener('resize', updateScale)
+    return () => window.removeEventListener('resize', updateScale)
+  }, [])
+
+  return (
+    <div 
+      ref={containerRef}
+      className="relative w-full"
+      style={{ aspectRatio: '1 / 1' }}
+    >
+      <div 
+        className="absolute"
+        style={{ 
+          width: 700,
+          height: 700,
+          left: '50%',
+          top: '50%',
+          transform: `translate(-50%, -50%) scale(${scale})`,
+          transformOrigin: 'center center'
+        }}
+      >
+        {children}
+      </div>
+    </div>
+  )
+}
+
+// Center element with circular tick marks and company name
+function CenterClockElement() {
+  // Match OrbitalClock size (700px with 310 outer radius)
+  const size = 700
+  const center = size / 2
+  const radius = 310
+  const tickCount = 60
+
+  // Create arc path for text on circle
+  const createCirclePath = (r: number) => {
+    return `
+      M ${center + r} ${center}
+      A ${r} ${r} 0 1 1 ${center - r} ${center}
+      A ${r} ${r} 0 1 1 ${center + r} ${center}
+    `
+  }
+
+  return (
+    <div 
+      className="relative"
+      style={{ width: size, height: size }}
+    >
+      {/* SVG for circular tick marks using | character */}
+      <svg
+        width={size}
+        height={size}
+        viewBox={`0 0 ${size} ${size}`}
+        className="absolute inset-0"
+        style={{ fontFamily: "'Helvetica Neue', 'Arial', sans-serif" }}
+      >
+        <defs>
+          <path
+            id="centerTickCircle"
+            d={createCirclePath(radius)}
+            fill="none"
+          />
+        </defs>
+
+        {/* Circular tick marks using | character on path */}
+        {Array.from({ length: tickCount }).map((_, i) => {
+          // Path starts at 3 o'clock, so 75% is 12 o'clock (top)
+          const offsetPercent = (75 + (i / tickCount) * 100) % 100
+          
+          return (
+            <text
+              key={`tick-${i}`}
+              fontSize="36"
+              fontWeight="600"
+              fill="white"
+              opacity={0.8}
+            >
+              <textPath
+                href="#centerTickCircle"
+                startOffset={`${offsetPercent}%`}
+                textAnchor="middle"
+              >
+                |
+              </textPath>
+            </text>
+          )
+        })}
+      </svg>
+      
+      {/* Center text */}
+      <div 
+        className="absolute inset-0 flex items-center justify-center"
+      >
+        <p 
+          className="font-bold uppercase tracking-[0.02em] text-center"
+          style={{ 
+            color: "#ffffff",
+            fontFamily: "'Helvetica Neue', 'Arial', sans-serif",
+            fontSize: 36,
+            lineHeight: '36px'
+          }}
+        >
+          Endless Coffee
+          <br />
+          Roasting Company
+        </p>
+      </div>
+    </div>
+  )
+}
 
 export function FooterSection() {
   const [email, setEmail] = useState("")
@@ -22,207 +150,94 @@ export function FooterSection() {
 
   return (
     <footer 
-      className="w-full min-h-screen flex flex-col"
+      className="w-full flex flex-col"
       style={{ 
         background: "#000000",
-        fontFamily: "'Helvetica Neue', 'Arial', sans-serif"
+        fontFamily: "'Helvetica Neue', 'Arial', sans-serif",
+        paddingLeft: 24,
+        paddingRight: 24
       }}
     >
-      {/* Main Content - Two Column Layout */}
-      <div className="flex-1 flex flex-col lg:flex-row">
-        {/* Left Section - Content */}
-        <div 
-          className="w-full lg:w-1/2 flex flex-col"
-          style={{ padding: 25 }}
-        >
-          {/* Top Section - H1 + Email */}
-        <div>
-          {/* Header Text */}
-          <h1 
-            className="text-4xl md:text-5xl lg:text-3xl xl:text-4xl font-bold uppercase leading-tight tracking-tight"
-            style={{ color: "#f4f4ed" }}
-          >
-            <span>Endless is </span>
-            <span style={{ color: "rgba(244, 244, 237, 0.25)" }}>
-              the hope that our passion resonates with anyone who values
-            </span>
-            <span> coffee made with care.</span>
-          </h1>
+      {/* Clock Section - 3 Column Grid on desktop, 2 Column on tablet */}
+      <div 
+        className="w-full grid grid-cols-2 lg:grid-cols-3"
+        style={{ paddingTop: 36, paddingBottom: 36, gap: 24 }}
+      >
+        {/* Left Clock - Hours & Days of Week */}
+        <ResponsiveClockWrapper>
+          <HourDayClock />
+        </ResponsiveClockWrapper>
+        
+        {/* Center Element - Hidden on tablet */}
+        <div className="hidden lg:block">
+          <ResponsiveClockWrapper>
+            <CenterClockElement />
+          </ResponsiveClockWrapper>
+        </div>
+        
+        {/* Right Clock - Calendar Clock */}
+        <ResponsiveClockWrapper>
+          <OrbitalClock />
+        </ResponsiveClockWrapper>
+      </div>
 
-          {/* Email Signup */}
-          <form onSubmit={handleSubmit} className="mt-8">
-            <div 
-              className="flex items-center justify-between py-2"
-              style={{ 
-                borderBottom: "0.5px solid rgba(244, 244, 237, 0.25)"
-              }}
+      {/* Bottom Content - 12 Column Grid */}
+      <div 
+        className="w-full grid grid-cols-4 md:grid-cols-12"
+        style={{ gap: 24, paddingTop: 24, paddingBottom: 24 }}
+      >
+        {/* Address + Copyright (cols 1-2) */}
+        <div className="col-span-2 md:col-span-2 flex flex-col justify-between text-sm leading-relaxed">
+          <div style={{ color: "#f4f4ed" }}>
+            <p>1024 9th Ave,</p>
+            <p>Oakland, CA 94606</p>
+          </div>
+          <p className="mt-4 md:mt-0" style={{ color: "rgba(244, 244, 237, 0.35)" }}>
+            © 2025 Endless Coffee Co.
+          </p>
+        </div>
+
+        {/* Tagline (cols 3-5) */}
+        <div className="col-span-2 md:col-span-3 text-sm leading-relaxed" style={{ color: "#f2f2f7" }}>
+          <p>
+            <span style={{ color: "#f4f4ed" }}>Endless is </span>
+            <span style={{ color: "rgba(244, 244, 237, 0.5)" }}>the hope that our passion resonates with anyone who values</span>
+            <span style={{ color: "#f4f4ed" }}> coffee made with care.</span>
+          </p>
+        </div>
+
+        {/* Spacer for mobile */}
+        <div className="hidden md:block md:col-span-1" />
+
+        {/* Email Signup (cols 7-10) */}
+        <div className="col-span-2 md:col-span-4 flex flex-col gap-1">
+          <p className="text-sm leading-relaxed" style={{ color: "rgba(244, 244, 237, 0.5)" }}>
+            Sign up for our email list and know when new drops are coming
+          </p>
+          <form onSubmit={handleSubmit}>
+            <button 
+              type="submit"
+              className="text-sm hover:opacity-70 transition-opacity text-left"
+              style={{ color: "#f4f4ed" }}
             >
-              <input
-                type="email"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                placeholder="Join our mailing list"
-                className="bg-transparent border-none outline-none text-base w-full"
-                style={{ color: "#f4f4ed" }}
-                disabled={isSubmitting}
-              />
-              <button
-                type="submit"
-                disabled={isSubmitting || !email}
-                className="text-base font-medium transition-colors hover:opacity-100 disabled:cursor-not-allowed whitespace-nowrap ml-4"
-                style={{ 
-                  color: submitted ? "#00FF6F" : "rgba(244, 244, 237, 0.25)"
-                }}
-              >
-                {submitted ? "Subscribed!" : isSubmitting ? "..." : "Subscribe"}
-              </button>
-            </div>
+              {submitted ? "Thanks!" : isSubmitting ? "..." : "Submit"}
+            </button>
           </form>
         </div>
 
-        {/* Bottom Section - Sitemap Links (floats to bottom) */}
-        <div className="mt-auto pt-12 lg:pt-16">
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
-              {/* Shop */}
-              <div className="flex flex-col gap-3">
-                <h3 
-                  className="text-sm font-medium uppercase tracking-wider mb-2"
-                  style={{ color: "rgba(244, 244, 237, 0.5)" }}
-                >
-                  Shop
-                </h3>
-                <a href="#" className="text-base hover:opacity-70 transition-opacity" style={{ color: "#f4f4ed" }}>
-                  All Products
-                </a>
-                <a href="#" className="text-base hover:opacity-70 transition-opacity" style={{ color: "#f4f4ed" }}>
-                  Coffee
-                </a>
-                <a href="#" className="text-base hover:opacity-70 transition-opacity" style={{ color: "#f4f4ed" }}>
-                  Equipment
-                </a>
-                <a href="#" className="text-base hover:opacity-70 transition-opacity" style={{ color: "#f4f4ed" }}>
-                  Merch
-                </a>
-                <a href="#" className="text-base hover:opacity-70 transition-opacity" style={{ color: "#f4f4ed" }}>
-                  Subscriptions
-                </a>
-              </div>
-
-              {/* Company */}
-              <div className="flex flex-col gap-3">
-                <h3 
-                  className="text-sm font-medium uppercase tracking-wider mb-2"
-                  style={{ color: "rgba(244, 244, 237, 0.5)" }}
-                >
-                  Company
-                </h3>
-                <a href="#" className="text-base hover:opacity-70 transition-opacity" style={{ color: "#f4f4ed" }}>
-                  About Us
-                </a>
-                <a href="#" className="text-base hover:opacity-70 transition-opacity" style={{ color: "#f4f4ed" }}>
-                  Our Story
-                </a>
-                <a href="#" className="text-base hover:opacity-70 transition-opacity" style={{ color: "#f4f4ed" }}>
-                  Careers
-                </a>
-                <a href="#" className="text-base hover:opacity-70 transition-opacity" style={{ color: "#f4f4ed" }}>
-                  Press
-                </a>
-              </div>
-
-              {/* Support */}
-              <div className="flex flex-col gap-3">
-                <h3 
-                  className="text-sm font-medium uppercase tracking-wider mb-2"
-                  style={{ color: "rgba(244, 244, 237, 0.5)" }}
-                >
-                  Support
-                </h3>
-                <a href="#" className="text-base hover:opacity-70 transition-opacity" style={{ color: "#f4f4ed" }}>
-                  Contact
-                </a>
-                <a href="#" className="text-base hover:opacity-70 transition-opacity" style={{ color: "#f4f4ed" }}>
-                  FAQ
-                </a>
-                <a href="#" className="text-base hover:opacity-70 transition-opacity" style={{ color: "#f4f4ed" }}>
-                  Shipping
-                </a>
-                <a href="#" className="text-base hover:opacity-70 transition-opacity" style={{ color: "#f4f4ed" }}>
-                  Returns
-                </a>
-                <a href="#" className="text-base hover:opacity-70 transition-opacity" style={{ color: "#f4f4ed" }}>
-                  Track Order
-                </a>
-              </div>
-
-              {/* Connect */}
-              <div className="flex flex-col gap-3">
-                <h3 
-                  className="text-sm font-medium uppercase tracking-wider mb-2"
-                  style={{ color: "rgba(244, 244, 237, 0.5)" }}
-                >
-                  Connect
-                </h3>
-                <a href="https://instagram.com" target="_blank" rel="noopener noreferrer" className="text-base hover:opacity-70 transition-opacity" style={{ color: "#f4f4ed" }}>
-                  Instagram
-                </a>
-                <a href="https://twitter.com" target="_blank" rel="noopener noreferrer" className="text-base hover:opacity-70 transition-opacity" style={{ color: "#f4f4ed" }}>
-                  Twitter
-                </a>
-                <a href="https://facebook.com" target="_blank" rel="noopener noreferrer" className="text-base hover:opacity-70 transition-opacity" style={{ color: "#f4f4ed" }}>
-                  Facebook
-                </a>
-                <a href="https://tiktok.com" target="_blank" rel="noopener noreferrer" className="text-base hover:opacity-70 transition-opacity" style={{ color: "#f4f4ed" }}>
-                  TikTok
-                </a>
-              </div>
-            </div>
+        {/* Links (cols 11-12) */}
+        <div className="col-span-2 md:col-span-2 flex gap-6 justify-end">
+          <div className="flex flex-col gap-1 text-sm" style={{ color: "#f4f4ed" }}>
+            <AnimatedLink href="https://instagram.com/endlesscoffee_co" className="text-sm" external>Instagram</AnimatedLink>
+            <AnimatedLink href="https://www.roastwith444.com/" className="text-sm" external>444</AnimatedLink>
+            <AnimatedLink href="#" className="text-sm">Contact</AnimatedLink>
+          </div>
+          <div className="flex flex-col gap-1 text-sm" style={{ color: "#f4f4ed" }}>
+            <AnimatedLink href="https://instagram.com/endlesscoffee_co" className="text-sm" external>Instagram</AnimatedLink>
+            <AnimatedLink href="#" className="text-sm">Substack</AnimatedLink>
+            <AnimatedLink href="#" className="text-sm">Contact</AnimatedLink>
           </div>
         </div>
-
-        {/* Clock Section - Bottom on mobile/tablet, Right on desktop */}
-        <div 
-          className="w-full lg:w-1/2 flex items-center justify-center p-8 order-last lg:order-none"
-          style={{ 
-            background: "#000000",
-          }}
-        >
-          <div className="w-full h-full flex items-center justify-center">
-            <div 
-              className="w-full max-w-[500px] lg:max-w-none aspect-square flex items-center justify-center"
-              style={{ maxHeight: "90vh" }}
-            >
-              <div className="scale-[0.7] md:scale-[0.85] lg:scale-[0.8] xl:scale-100 origin-center">
-                <OrbitalClock />
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      {/* Full Width Legal Links */}
-      <div 
-        className="w-full flex flex-wrap items-center justify-between gap-6 py-6"
-        style={{ 
-          borderTop: "0.5px solid rgba(244, 244, 237, 0.1)",
-          paddingLeft: 25,
-          paddingRight: 25
-        }}
-      >
-        <div className="flex flex-wrap gap-6">
-          <a href="#" className="text-sm hover:opacity-70 transition-opacity" style={{ color: "rgba(244, 244, 237, 0.5)" }}>
-            Privacy Policy
-          </a>
-          <a href="#" className="text-sm hover:opacity-70 transition-opacity" style={{ color: "rgba(244, 244, 237, 0.5)" }}>
-            Terms of Service
-          </a>
-          <a href="#" className="text-sm hover:opacity-70 transition-opacity" style={{ color: "rgba(244, 244, 237, 0.5)" }}>
-            Accessibility
-          </a>
-        </div>
-        <span className="text-sm" style={{ color: "rgba(244, 244, 237, 0.3)" }}>
-          © 2025 Endless Coffee Co.
-        </span>
       </div>
     </footer>
   )

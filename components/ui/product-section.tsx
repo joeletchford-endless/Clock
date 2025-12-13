@@ -119,40 +119,76 @@ function ProductCard({ product }: { product: Product }) {
         </div>
 
         {/* Quantity & Add to Cart */}
-        <div className="flex gap-6">
+        <div className="flex gap-4">
           {/* Quantity Selector */}
-          <div 
-            className="flex items-center justify-between p-3 w-[160px] md:w-[212px]"
-            style={{ border: "0.5px solid rgba(0, 0, 0, 0.25)" }}
-          >
+          <div className="flex items-center gap-3">
+            {/* Decrease Button */}
             <button 
               onClick={decreaseQuantity}
-              className="text-base font-medium hover:opacity-70 transition-opacity px-2"
-              style={{ color: quantity > 1 ? "#000000" : "rgba(0, 0, 0, 0.25)" }}
+              className="w-9 h-9 flex items-center justify-center rounded-full transition-colors group overflow-hidden"
+              style={{ 
+                background: quantity > 1 ? "rgba(0, 0, 0, 0.1)" : "rgba(0, 0, 0, 0.05)",
+                color: quantity > 1 ? "#000000" : "rgba(0, 0, 0, 0.3)"
+              }}
+              disabled={quantity <= 1}
             >
-              –
+              <span className="relative w-full h-full block overflow-hidden">
+                <span className="absolute inset-0 flex items-center justify-center transition-transform duration-300 group-hover:-translate-y-full">
+                  –
+                </span>
+                <span className="absolute inset-0 flex items-center justify-center transition-transform duration-300 translate-y-full group-hover:translate-y-0">
+                  –
+                </span>
+              </span>
             </button>
-            <span className="text-base font-medium" style={{ color: "#000000" }}>
-              {quantity}
-            </span>
-            <button 
-              onClick={increaseQuantity}
-              className="text-base font-medium hover:opacity-70 transition-opacity px-2"
+
+            {/* Quantity Display */}
+            <span 
+              className="text-base font-medium w-8 text-center"
               style={{ color: "#000000" }}
             >
-              +
+              {quantity}
+            </span>
+
+            {/* Increase Button */}
+            <button 
+              onClick={increaseQuantity}
+              className="w-9 h-9 flex items-center justify-center rounded-full transition-colors group overflow-hidden hover:bg-black/20"
+              style={{ 
+                background: "rgba(0, 0, 0, 0.1)",
+                color: "#000000"
+              }}
+            >
+              <span className="relative w-full h-full block overflow-hidden">
+                <span className="absolute inset-0 flex items-center justify-center transition-transform duration-300 group-hover:-translate-y-full">
+                  +
+                </span>
+                <span className="absolute inset-0 flex items-center justify-center transition-transform duration-300 translate-y-full group-hover:translate-y-0">
+                  +
+                </span>
+              </span>
             </button>
           </div>
 
           {/* Add to Cart Button */}
           <button 
-            className="flex-1 p-3 text-base font-medium hover:bg-black hover:text-white transition-colors"
-            style={{ 
-              border: "0.5px solid #000000",
-              color: "#000000"
-            }}
+            className="flex-1 flex items-center justify-center gap-2 backdrop-blur-[2px] py-3 px-4 text-base font-medium rounded-full border border-black/10 bg-black/5 hover:bg-black/10 transition-colors group overflow-hidden"
+            style={{ color: "#000000" }}
           >
-            Add to cart
+            <span className="relative block overflow-hidden" style={{ height: "1.25em" }}>
+              <span className="flex flex-col transition-transform duration-300 ease-out transform group-hover:-translate-y-1/2">
+                <span>Add to cart</span>
+                <span>Add to cart</span>
+              </span>
+            </span>
+            <span className="relative w-5 h-5 block overflow-hidden">
+              <span className="absolute inset-0 flex items-center justify-center transition-transform duration-300 group-hover:translate-x-full">
+                →
+              </span>
+              <span className="absolute inset-0 flex items-center justify-center transition-transform duration-300 -translate-x-full group-hover:translate-x-0">
+                →
+              </span>
+            </span>
           </button>
         </div>
       </div>

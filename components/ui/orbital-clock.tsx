@@ -23,13 +23,10 @@ export function OrbitalClock() {
   const currentMinute = time.getMinutes()
   const currentSecond = time.getSeconds()
 
-  // Calculate rotations
+  // Calculate rotations for calendar hands
   const dayOfMonthDeg = ((currentDayOfMonth - 1) / 31) * 360
-  const dayOfWeekDeg = (currentDayOfWeek / 7) * 360
-  const monthDeg = (currentMonth / 12) * 360
-  const hourDeg = (currentHour / 12) * 360 + (currentMinute / 60) * 30
-  const minuteDeg = (currentMinute / 60) * 360 + (currentSecond / 60) * 6
-  const secondDeg = (currentSecond / 60) * 360
+  // Month hand: add 7.2 degree offset to match the 2% label offset
+  const monthDeg = (currentMonth / 12) * 360 + 7.2
 
   const formatFullDate = () => {
     return time.toLocaleDateString("en-US", {
@@ -57,7 +54,6 @@ export function OrbitalClock() {
   const innerRadius = 150
 
   // Create arc path starting from RIGHT (3 o'clock) going clockwise
-  // This puts the top (12 o'clock) at 25% offset, far from path boundaries
   const createCirclePath = (radius: number) => {
     return `
       M ${center + radius} ${center}
@@ -71,7 +67,7 @@ export function OrbitalClock() {
       className="relative select-none text-white"
       style={{
         width: size,
-        height: size,
+        height: size
       }}
     >
 
@@ -131,8 +127,7 @@ export function OrbitalClock() {
           {Array.from({ length: 31 }, (_, i) => {
             const day = i + 1
             const isActive = currentDayOfMonth === day
-            // Path starts at 3 o'clock, so 75% is 12 o'clock (top)
-            // Wrap around using modulo to stay within 0-100%
+            // Path starts at 3 o'clock, 75% is 12 o'clock (top)
             const offsetPercent = (75 + (i / 31) * 100) % 100
             
             return (
@@ -156,15 +151,16 @@ export function OrbitalClock() {
           {/* MIDDLE RING: Months on curved path */}
           {months.map((month, i) => {
             const isActive = currentMonth === i
-            // Path starts at 3 o'clock, so 75% is 12 o'clock (top)
-            const offsetPercent = (75 + (i / 12) * 100) % 100
+            // Path starts at 3 o'clock, 75% is 12 o'clock (top)
+            // Shift by 2% to avoid 0% seam issue for APR
+            const offsetPercent = (77 + (i / 12) * 100) % 100
             
             return (
               <text
                 key={`month-${i}`}
                 fontSize="36"
                 fontWeight="700"
-                fill={isActive ? "#ffffff" : "rgba(255,255,255,0.5)"}
+                fill={isActive ? "#00FF6F" : "rgba(255,255,255,0.5)"}
               >
                 <textPath
                   href="#middleCircle"
@@ -177,29 +173,6 @@ export function OrbitalClock() {
             )
           })}
 
-          {/* INNER RING: Days of the week on curved path */}
-          {days.map((day, i) => {
-            const isActive = currentDayOfWeek === i
-            // Path starts at 3 o'clock, so 75% is 12 o'clock (top)
-            const offsetPercent = (75 + (i / 7) * 100) % 100
-            
-            return (
-              <text
-                key={`weekday-${i}`}
-                fontSize="36"
-                fontWeight="700"
-                fill={isActive ? "#00FF6F" : "rgba(255,255,255,0.4)"}
-              >
-                <textPath
-                  href="#innerCircle"
-                  startOffset={`${offsetPercent}%`}
-                  textAnchor="middle"
-                >
-                  {day}
-                </textPath>
-              </text>
-            )
-          })}
 
           {/* Clock hands */}
           <g>
@@ -215,28 +188,16 @@ export function OrbitalClock() {
               transform={`rotate(${dayOfMonthDeg} ${center} ${center})`}
             />
 
-            {/* MEDIUM HAND - Points to Months (middle ring) - Light gray */}
-            <line
-              x1={center}
-              y1={center }
-              x2={center}
-              y2={center - middleRadius + 30}
-              stroke="white"
-              strokeWidth="6"
-              strokeLinecap="butt"
-              transform={`rotate(${monthDeg} ${center} ${center})`}
-            />
-
-            {/* SHORT HAND - Points to Days of Week (inner ring) - Lime Green */}
+            {/* MEDIUM HAND - Points to Months (middle ring) - Green */}
             <line
               x1={center}
               y1={center}
               x2={center}
-              y2={center - innerRadius + 30}
+              y2={center - middleRadius + 30}
               stroke="#00FF6F"
               strokeWidth="6"
               strokeLinecap="butt"
-              transform={`rotate(${dayOfWeekDeg} ${center} ${center})`}
+              transform={`rotate(${monthDeg} ${center} ${center})`}
             />
 
             {/* Center hub */}
@@ -245,7 +206,6 @@ export function OrbitalClock() {
               cy={center}
               r="14"
               fill="white"
-          
               strokeWidth="3"
             />
 

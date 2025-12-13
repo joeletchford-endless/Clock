@@ -2,6 +2,7 @@
 
 import { useEffect, useRef, useState } from "react"
 import Link from "next/link"
+import { AnimatedLink } from "./animated-link"
 
 interface NavigationProps {
   cartCount?: number
@@ -59,12 +60,22 @@ export function Navigation({ cartCount = 0, variant = "light" }: NavigationProps
         }}
       >
         {/* Logo / Brand */}
-        <Link href="/" className="flex flex-col gap-0.5 hover:opacity-70 transition-opacity">
-          <span 
-            className="text-base font-medium uppercase tracking-wider"
-            style={{ color: primaryColor, letterSpacing: "0.32px" }}
-          >
-            Endless Coffee
+        <Link href="/" className="flex flex-col gap-0.5 group">
+          <span className="relative inline-block overflow-hidden" style={{ height: "1.25em" }}>
+            <span className="flex flex-col transition-transform duration-300 ease-out transform group-hover:-translate-y-1/2">
+              <span 
+                className="text-base font-medium uppercase tracking-wider"
+                style={{ color: primaryColor, letterSpacing: "0.32px" }}
+              >
+                Endless Coffee
+              </span>
+              <span 
+                className="text-base font-medium uppercase tracking-wider"
+                style={{ color: isLight ? "#000000" : "#ffffff", letterSpacing: "0.32px" }}
+              >
+                Endless Coffee
+              </span>
+            </span>
           </span>
           <span 
             className="text-base font-medium uppercase tracking-wider"
@@ -75,13 +86,14 @@ export function Navigation({ cartCount = 0, variant = "light" }: NavigationProps
         </Link>
 
         {/* Cart */}
-        <Link 
+        <AnimatedLink 
           href="/cart"
-          className="text-base font-medium uppercase tracking-wider hover:opacity-70 transition-opacity"
-          style={{ color: primaryColor, letterSpacing: "0.32px" }}
+          className="text-base font-medium uppercase tracking-wider"
+          defaultColor={isLight ? "rgba(0, 0, 0, 0.7)" : "rgba(244, 244, 237, 0.7)"}
+          hoverColor={primaryColor}
         >
           Cart ({cartCount})
-        </Link>
+        </AnimatedLink>
       </nav>
     </>
   )
