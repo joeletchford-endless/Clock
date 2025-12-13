@@ -1,8 +1,18 @@
+import { HeroSection } from "@/components/ui/hero-section"
+import { Navigation } from "@/components/ui/navigation"
+import { ProductSection } from "@/components/ui/product-section"
 import { FooterSection } from "@/components/ui/footer-section"
 
 export default function Home() {
   return (
-    <main className="min-h-screen w-full">
+    <main className="w-full">
+      {/* Hero Section with intro text and ENDLESS images */}
+      <div style={{ background: "#f4f4ed" }}>
+        <HeroSection />
+        <Navigation variant="light" cartCount={0} />
+      </div>
+      
+      <ProductSection />
       <FooterSection />
     </main>
   )
