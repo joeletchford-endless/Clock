@@ -56,6 +56,7 @@ function ProductCard({ product }: { product: Product }) {
       className="flex-1 flex flex-col gap-9 p-6"
       style={{ 
         border: "0.5px solid rgba(0, 0, 0, 0.15)",
+        minHeight: "calc(100vh - 55px - 50px)" // viewport minus nav height (55px) minus padding (25px * 2)
       }}
     >
       {/* Product Name & Price */}

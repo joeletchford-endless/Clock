@@ -112,6 +112,7 @@ function CenterClockElement() {
       {/* Center text */}
       <div 
         className="absolute inset-0 flex items-center justify-center"
+        style={{ left: -5, top: -1 }}
       >
         <p 
           className="font-bold uppercase tracking-[0.02em] text-center"
