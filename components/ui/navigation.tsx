@@ -98,14 +98,14 @@ export function Navigation({ variant = "light" }: NavigationProps) {
         >
           {/* Logo / Brand */}
           <Link href="/" className="flex flex-col" style={{ gap: 0 }}>
-            <span 
-              className="text-sm sm:text-base font-medium uppercase"
+            <span
+              className="text-sm sm:text-base font-bold uppercase"
               style={{ color: primaryColor, lineHeight: "16px" }}
             >
               Endless Coffee
             </span>
-            <span 
-              className="text-sm sm:text-base font-medium uppercase"
+            <span
+              className="text-sm sm:text-base font-bold uppercase"
               style={{ color: secondaryColor, lineHeight: "16px" }}
             >
               Roasting Company
@@ -135,8 +135,8 @@ export function Navigation({ variant = "light" }: NavigationProps) {
             onClick={openCart}
             className="inline-block"
           >
-            <span 
-              className="group relative inline-block overflow-hidden text-sm sm:text-base font-medium uppercase tracking-wider"
+            <span
+              className="group relative inline-block overflow-hidden text-sm sm:text-base font-bold uppercase tracking-wider"
               style={{ height: "1.25em" }}
             >
               <span className="flex flex-col transition-transform duration-300 ease-out transform group-hover:-translate-y-1/2">

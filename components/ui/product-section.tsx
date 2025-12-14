@@ -391,7 +391,7 @@ export function ProductSection() {
       </div>
 
       {/* Product Cards */}
-      <div className={`flex flex-col lg:flex-row ${layout.grid.gap}`}>
+      <div className="flex flex-col lg:flex-row gap-8 sm:gap-6">
         {products.map((product) => (
           <ProductCard key={product.id} product={product} />
         ))}
