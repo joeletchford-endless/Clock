@@ -25,8 +25,7 @@ export function OrbitalClock() {
 
   // Calculate rotations for calendar hands
   const dayOfMonthDeg = ((currentDayOfMonth - 1) / 31) * 360
-  // Month hand: add 7.2 degree offset to match the 2% label offset
-  const monthDeg = (currentMonth / 12) * 360 + 7.2
+  const monthDeg = (currentMonth / 12) * 360
 
   const formatFullDate = () => {
     return time.toLocaleDateString("en-US", {
@@ -148,27 +147,30 @@ export function OrbitalClock() {
             )
           })}
 
-          {/* MIDDLE RING: Months on curved path */}
+          {/* MIDDLE RING: Months positioned with rotation */}
           {months.map((month, i) => {
             const isActive = currentMonth === i
-            // Path starts at 3 o'clock, 75% is 12 o'clock (top)
-            // Shift by 2% to avoid 0% seam issue for APR
-            const offsetPercent = (77 + (i / 12) * 100) % 100
+            // Calculate angle: JAN (index 0) at -90 degrees (top), going clockwise
+            const angleDeg = -90 + (i * 30) // 30 degrees per month (360/12)
+            const angleRad = (angleDeg * Math.PI) / 180
+            const x = center + middleRadius * Math.cos(angleRad)
+            const y = center + middleRadius * Math.sin(angleRad)
+            // Rotate text to follow the circle (perpendicular to radius)
+            const textRotation = angleDeg + 90
             
             return (
               <text
                 key={`month-${i}`}
+                x={x}
+                y={y}
                 fontSize="36"
                 fontWeight="700"
                 fill={isActive ? "#00FF6F" : "rgba(255,255,255,0.5)"}
+                textAnchor="middle"
+                dominantBaseline="middle"
+                transform={`rotate(${textRotation} ${x} ${y})`}
               >
-                <textPath
-                  href="#middleCircle"
-                  startOffset={`${offsetPercent}%`}
-                  textAnchor="middle"
-                >
-                  {month}
-                </textPath>
+                {month}
               </text>
             )
           })}

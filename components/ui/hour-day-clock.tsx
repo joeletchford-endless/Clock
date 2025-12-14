@@ -21,8 +21,7 @@ export function HourDayClock() {
   const currentSecond = time.getSeconds()
 
   // Calculate rotations for hour, minute, and day of week hands
-  // Hour hand: add 7.2 degree offset to match the 2% label offset
-  const hourDeg = ((time.getHours() % 12) / 12) * 360 + (currentMinute / 60) * 30 + 7.2
+  const hourDeg = ((time.getHours() % 12) / 12) * 360 + (currentMinute / 60) * 30
   const minuteDeg = (currentMinute / 60) * 360 + (currentSecond / 60) * 6
   const dayOfWeekDeg = (currentDayOfWeek / 7) * 360
 
@@ -71,28 +70,31 @@ export function HourDayClock() {
           />
         </defs>
 
-        {/* OUTER RING: Hours (12:00, 1:00, 2:00...) on curved path */}
+        {/* OUTER RING: Hours (12:00, 1:00, 2:00...) positioned with rotation */}
         {Array.from({ length: 12 }, (_, i) => {
           const hour = i === 0 ? 12 : i
           const displayHour = `${hour}:00`
-          // Path starts at 3 o'clock, 75% is 12 o'clock (top)
-          // Shift by 2% to avoid 0% seam issue
-          const offsetPercent = (77 + (i / 12) * 100) % 100
+          // Calculate angle: 12 o'clock is at -90 degrees (top), going clockwise
+          const angleDeg = -90 + (i * 30) // 30 degrees per hour
+          const angleRad = (angleDeg * Math.PI) / 180
+          const x = center + outerRadius * Math.cos(angleRad)
+          const y = center + outerRadius * Math.sin(angleRad)
+          // Rotate text to follow the circle (perpendicular to radius)
+          const textRotation = angleDeg + 90
           
           return (
             <text
               key={`hour-${i}`}
+              x={x}
+              y={y}
               fontSize="36"
               fontWeight="700"
               fill="rgba(255,255,255,0.6)"
+              textAnchor="middle"
+              dominantBaseline="middle"
+              transform={`rotate(${textRotation} ${x} ${y})`}
             >
-              <textPath
-                href="#hourDayOuterCircle"
-                startOffset={`${offsetPercent}%`}
-                textAnchor="middle"
-              >
-                {displayHour}
-              </textPath>
+              {displayHour}
             </text>
           )
         })}
