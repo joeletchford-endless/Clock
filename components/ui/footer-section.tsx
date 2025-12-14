@@ -153,7 +153,7 @@ export function FooterSection() {
 
   return (
     <footer 
-      className={`w-full flex flex-col ${layout.padding.x.class}`}
+      className="w-full flex flex-col"
       style={{ 
         background: colors.bg.primary,
         fontFamily: "'Helvetica Neue', 'Arial', sans-serif",
@@ -161,7 +161,7 @@ export function FooterSection() {
     >
       {/* Clock Section - 3 Column Grid on desktop, 2 on tablet, 1 on mobile */}
       <div 
-        className={`w-full grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 ${layout.padding.section.class} ${layout.grid.gap}`}
+        className={`w-full grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 ${layout.padding.section.class} pb-16 ${layout.grid.gap}`}
       >
         {/* Left Clock - Hours & Days of Week */}
         <ResponsiveClockWrapper>

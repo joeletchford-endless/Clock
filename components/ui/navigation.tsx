@@ -86,11 +86,11 @@ export function Navigation({ variant = "light" }: NavigationProps) {
       
       <div 
         ref={wrapperRef}
-        className={`w-full z-50 ${isSticky ? "fixed top-0 left-0 right-0 shadow-sm" : "relative"}`}
+        className={`w-full z-50 ${isSticky ? "fixed top-0 left-0 right-0 shadow-sm px-4 lg:px-6" : "relative"}`}
         style={{ background: bgColor }}
       >
         <nav 
-          className={`w-full flex items-center justify-between ${layout.padding.x.class} relative`}
+          className="w-full flex items-center justify-between relative"
           style={{ 
             fontFamily: "'Helvetica Neue', 'Arial', sans-serif",
             height: 55
@@ -153,7 +153,7 @@ export function Navigation({ variant = "light" }: NavigationProps) {
           className="overflow-hidden"
           style={{ height: 0, opacity: 0 }}
         >
-          <div className={`${layout.padding.x.class} pb-4 sm:pb-6`}>
+          <div className="pb-4 sm:pb-6">
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
             {paragraphs.map((text, index) => (
               <p 

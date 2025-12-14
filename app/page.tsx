@@ -8,13 +8,13 @@ import { CartDrawer } from "@/components/ui/cart-drawer"
 export default function Home() {
   return (
     <DrawerProvider>
-      <main className="w-full">
+      <main className="w-full p-4 lg:p-6">
         {/* Hero Section with intro text and ENDLESS images */}
         <div style={{ background: "#F4F1E8" }}>
           <HeroSection />
           <Navigation variant="light" />
         </div>
-        
+
         <ProductSection />
         <FooterSection />
       </main>

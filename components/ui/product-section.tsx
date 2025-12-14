@@ -281,10 +281,10 @@ function ProductCard({ product }: { product: Product }) {
         </div>
       </div>
 
-      {/* Content Grid - 1 column on mobile, 2 on tablet+ */}
-      <div className={`grid grid-cols-1 sm:grid-cols-2 ${layout.gap.sm.class}`}>
-                    {/* Title & Price - spans both columns */}
-                    <div className={`col-span-1 sm:col-span-2 flex items-center ${layout.gap.sm.class}`}>
+      {/* Content Grid - 1 column on mobile, 2/3 + 1/3 on tablet+ */}
+      <div className="grid grid-cols-1 sm:grid-cols-3 p-0 sm:px-4" style={{ columnGap: 24, rowGap: 8 }}>
+                    {/* Title & Price - spans all columns */}
+                    <div className="col-span-1 sm:col-span-3 flex items-center" style={{ gap: 12 }}>
                       <h3 className="text-base font-bold uppercase" style={{ color: colors.olive.black }}>
                         {product.name}
                       </h3>
@@ -293,8 +293,8 @@ function ProductCard({ product }: { product: Product }) {
                       </span>
                     </div>
 
-        {/* Left Column - Description */}
-        <div className="flex flex-col" style={{ gap: 3 }}>
+        {/* Left Column - Description (2/3) */}
+        <div className="flex flex-col sm:col-span-2" style={{ gap: 3 }}>
           <div 
             className="overflow-hidden"
             style={{ 
@@ -303,8 +303,7 @@ function ProductCard({ product }: { product: Product }) {
             }}
           >
                         <p 
-                          className="text-xs"
-                          style={{ color: colors.olive.black, lineHeight: "1.1" }}
+                          style={{ color: colors.olive.black, lineHeight: "1.1", fontSize: 14 }}
                         >
                           {product.details}
                         </p>
@@ -318,8 +317,8 @@ function ProductCard({ product }: { product: Product }) {
           </button>
         </div>
 
-        {/* Right Column - Specs Grid (2 cols x 3 rows) */}
-        <div className="grid grid-cols-2" style={{ gap: 8 }}>
+        {/* Right Column - Specs Grid (1/3) */}
+        <div className="grid grid-cols-1 sm:col-span-1" style={{ gap: 8 }}>
                       <div className="flex flex-col" style={{ gap: 0, justifyContent: 'flex-start', alignItems: 'flex-start', height: 'fit-content' }}>
                         <p className="text-xs" style={{ color: colors.olive.light }}>Process</p>
                         <p className="text-xs" style={{ color: colors.olive.black }}>{product.process}</p>
@@ -344,7 +343,7 @@ function ProductCard({ product }: { product: Product }) {
       </div>
 
       {/* Add to Cart Button */}
-      <div className="mt-auto">
+      <div className="mt-auto p-0 sm:p-4 sm:pt-0">
         <button 
           className="w-full flex items-center justify-center p-3 transition-all duration-300"
           style={{ 
@@ -371,15 +370,15 @@ function ProductCard({ product }: { product: Product }) {
 
 export function ProductSection() {
   return (
-    <section 
-      className={`w-full ${layout.section.wrapper}`}
-      style={{ 
+    <section
+      className="w-full mb-16"
+      style={{
         background: "#F4F1E8",
         fontFamily: "'Helvetica Neue', 'Arial', sans-serif",
       }}
     >
       {/* Header */}
-      <div className={`flex items-center justify-center ${layout.section.headerBottom}`}>
+      <div className="flex items-center justify-center py-16">
         <h2 
           className="text-xl sm:text-2xl md:text-3xl lg:text-4xl font-bold uppercase text-center max-w-2xl"
           style={{ color: colors.olive.black }}
