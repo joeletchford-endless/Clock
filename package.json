@@ -2,6 +2,7 @@
   "name": "orbital-clock",
   "version": "0.1.0",
   "private": true,
+  "description": "Endless Coffee Clock with responsive design",
   "scripts": {
     "dev": "next dev",
     "build": "next build",
