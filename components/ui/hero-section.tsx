@@ -3,6 +3,7 @@
 import { useEffect, useRef } from "react"
 import gsap from "gsap"
 import { colors } from "@/lib/colors"
+import { layout } from "@/lib/layout"
 
 
 const paragraphs = [
@@ -145,7 +146,7 @@ export function HeroSection() {
       }}
     >
       {/* Large ENDLESS SVG - letter paths animated */}
-      <div className="px-6 w-full overflow-hidden" style={{ paddingTop: 24, paddingBottom: 24 }}>
+      <div className={`${layout.padding.x.class} w-full pt-4 pb-0 sm:pb-6`}>
         <svg 
           ref={svgRef}
           viewBox="0 0 1392 249" 

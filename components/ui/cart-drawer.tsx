@@ -2,6 +2,7 @@
 
 import { useDrawer, CartItem } from "./drawer-context"
 import { colors } from "@/lib/colors"
+import { layout } from "@/lib/layout"
 import { products } from "./product-section"
 
 function CartItemRow({ item }: { item: CartItem }) {
@@ -170,12 +171,9 @@ export function CartDrawer() {
 
       {/* Drawer Panel */}
       <div
-        className="fixed z-[70] flex flex-col transition-all duration-300 ease-out"
+        className="fixed z-[70] flex flex-col transition-all duration-300 ease-out top-0 right-0 bottom-0 w-full sm:top-6 sm:right-6 sm:bottom-6 sm:w-auto"
         style={{
-          top: 24,
-          right: 24,
-          bottom: 24,
-          width: "min(420px, 90vw)",
+          maxWidth: 420,
           background: colors.bg.primary,
           transform: isCartOpen ? "scale(1)" : "scale(0.95)",
           transformOrigin: "bottom right",
@@ -186,9 +184,8 @@ export function CartDrawer() {
       >
         {/* Header */}
         <div 
-          className="flex items-center justify-between shrink-0"
+          className={`flex items-center justify-between shrink-0 ${layout.padding.x.class} py-4 sm:py-5`}
           style={{ 
-            padding: "20px 24px",
             borderBottom: `1px solid ${colors.border.light}`,
           }}
         >
@@ -232,8 +229,7 @@ export function CartDrawer() {
 
         {/* Scrollable Content */}
         <div 
-          className="flex-1 overflow-y-auto"
-          style={{ padding: 24 }}
+          className={`flex-1 overflow-y-auto ${layout.padding.x.class} py-4 sm:py-6`}
         >
           {cartItems.length === 0 ? (
             <div 
@@ -254,7 +250,7 @@ export function CartDrawer() {
               </p>
             </div>
           ) : (
-            <div className="flex flex-col" style={{ gap: 16 }}>
+            <div className={`flex flex-col ${layout.gap.sm.class}`}>
               {/* Cart Items */}
               {cartItems.map(item => (
                 <CartItemRow key={item.id} item={item} />
@@ -272,9 +268,8 @@ export function CartDrawer() {
           
           return (
             <div 
-              className="shrink-0"
+              className={`shrink-0 ${layout.padding.x.class} py-3 sm:py-4`}
               style={{ 
-                padding: "16px 24px",
                 borderTop: `1px solid ${colors.border.light}`,
               }}
             >
@@ -285,8 +280,7 @@ export function CartDrawer() {
                 You might also like
               </h4>
               <div 
-                className="flex gap-3 overflow-x-auto pb-2"
-                style={{ marginRight: -24, paddingRight: 24 }}
+                className={`flex ${layout.gap.xs.class} overflow-x-auto pb-2 -mr-4 pr-4 sm:-mr-6 sm:pr-6`}
               >
                 {recommendedProducts.map(product => (
                   <RecommendedProductCard key={product.id} product={product} />
@@ -298,9 +292,8 @@ export function CartDrawer() {
 
         {/* Footer - Subtotal & Checkout */}
         <div 
-          className="shrink-0"
+          className={`shrink-0 ${layout.padding.x.class} py-4 sm:py-6`}
           style={{ 
-            padding: 24,
             borderTop: `1px solid ${colors.border.light}`,
           }}
         >

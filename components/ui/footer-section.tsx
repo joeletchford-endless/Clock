@@ -5,6 +5,7 @@ import { OrbitalClock } from "./orbital-clock"
 import { HourDayClock } from "./hour-day-clock"
 import { AnimatedLink } from "./animated-link"
 import { colors } from "@/lib/colors"
+import { layout } from "@/lib/layout"
 
 // Responsive clock wrapper that scales content to fit container
 function ResponsiveClockWrapper({ children }: { children: React.ReactNode }) {
@@ -152,18 +153,15 @@ export function FooterSection() {
 
   return (
     <footer 
-      className="w-full flex flex-col"
+      className={`w-full flex flex-col ${layout.padding.x.class}`}
       style={{ 
         background: colors.bg.primary,
         fontFamily: "'Helvetica Neue', 'Arial', sans-serif",
-        paddingLeft: 24,
-        paddingRight: 24
       }}
     >
-      {/* Clock Section - 3 Column Grid on desktop, 2 Column on tablet */}
+      {/* Clock Section - 3 Column Grid on desktop, 2 on tablet, 1 on mobile */}
       <div 
-        className="w-full grid grid-cols-2 lg:grid-cols-3"
-        style={{ paddingTop: 64, paddingBottom: 32, gap: 24 }}
+        className={`w-full grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 ${layout.padding.section.class} ${layout.grid.gap}`}
       >
         {/* Left Clock - Hours & Days of Week */}
         <ResponsiveClockWrapper>
@@ -185,8 +183,7 @@ export function FooterSection() {
 
       {/* Bottom Content - 12 Column Grid */}
       <div 
-        className="w-full grid grid-cols-4 md:grid-cols-12"
-        style={{ gap: 24, paddingTop: 32, paddingBottom: 24 }}
+        className={`w-full grid grid-cols-2 sm:grid-cols-4 md:grid-cols-12 ${layout.grid.gap} ${layout.space.md}`}
       >
         {/* Address + Copyright (cols 1-2) */}
         <div className="col-span-2 md:col-span-2 flex flex-col justify-between text-sm leading-relaxed">
@@ -235,7 +232,7 @@ export function FooterSection() {
         </div>
 
         {/* Links (cols 11-12) */}
-        <div className="col-span-2 md:col-span-2 flex gap-6 justify-end">
+        <div className="col-span-2 md:col-span-2 flex gap-6 justify-start sm:justify-end">
           <div className="flex flex-col gap-1 text-sm">
             <AnimatedLink href="https://instagram.com/endlesscoffee_co" className="text-sm" external>Instagram</AnimatedLink>
             <AnimatedLink href="https://www.roastwith444.com/" className="text-sm" external>444</AnimatedLink>

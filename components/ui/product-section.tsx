@@ -1,7 +1,8 @@
 "use client"
 
-import { useState } from "react"
+import { useState, useEffect, useRef } from "react"
 import { colors } from "@/lib/colors"
+import { layout } from "@/lib/layout"
 import { useDrawer } from "./drawer-context"
 
 interface Product {
@@ -74,6 +75,50 @@ export const products: Product[] = [
   }
 ]
 
+// Responsive wrapper that scales badge content to fit container
+function ResponsiveBadgeWrapper({ children }: { children: React.ReactNode }) {
+  const containerRef = useRef<HTMLDivElement>(null)
+  const [scale, setScale] = useState(1)
+
+  // Native badge dimensions
+  const nativeWidth = 315
+  const nativeHeight = 246
+
+  useEffect(() => {
+    const updateScale = () => {
+      if (containerRef.current) {
+        const containerWidth = containerRef.current.offsetWidth
+        setScale(containerWidth / nativeWidth)
+      }
+    }
+    updateScale()
+    window.addEventListener('resize', updateScale)
+    return () => window.removeEventListener('resize', updateScale)
+  }, [])
+
+  return (
+    <div 
+      ref={containerRef}
+      className="relative w-full"
+      style={{ aspectRatio: `${nativeWidth} / ${nativeHeight}` }}
+    >
+      <div 
+        style={{ 
+          width: nativeWidth,
+          height: nativeHeight,
+          position: 'absolute',
+          left: '50%',
+          top: '50%',
+          transform: `translate(-50%, -50%) scale(${scale})`,
+          transformOrigin: 'center center'
+        }}
+      >
+        {children}
+      </div>
+    </div>
+  )
+}
+
 // Flexible oval badge component - uses HTML/CSS grid for center content + SVG for oval and curved text
 function ProductBadge({ product, isHovered = false }: { product: Product; isHovered?: boolean }) {
   // Split name into lines (first word on line 1, rest on line 2)
@@ -134,15 +179,15 @@ function ProductBadge({ product, isHovered = false }: { product: Product; isHove
         </text>
       </svg>
       
-      {/* HTML content with flexbox - 3 equal sections, 0px gap */}
+      {/* HTML content with flexbox - 3 equal sections */}
       <div 
         className="absolute inset-0 flex flex-col text-center text-black uppercase font-bold"
-        style={{ padding: '15% 20px', gap: 20, justifyContent: 'stretch', alignItems: 'stretch' }}
+        style={{ padding: '15% 20px', gap: 10, justifyContent: 'stretch', alignItems: 'stretch' }}
       >
         {/* Row 1: Variety - flex: 1 to stretch equally */}
         <div 
           className="flex flex-col items-center justify-center"
-          style={{ flex: 1, fontSize: 12, lineHeight: 1.1 }}
+          style={{ flex: 1, fontSize: 10, lineHeight: 1.1, letterSpacing: '0.05em' }}
         >
           <span>{product.variety.toUpperCase()}</span>
           <span>VARIETY</span>
@@ -154,7 +199,7 @@ function ProductBadge({ product, isHovered = false }: { product: Product; isHove
           style={{ flex: 1 }}
         >
           {/* Left: Region */}
-          <div className="flex items-center justify-center" style={{ fontSize: 12 }}>
+          <div className="flex items-center justify-center" style={{ fontSize: 10, letterSpacing: '0.05em' }}>
             {product.region.toUpperCase()}
           </div>
           
@@ -165,7 +210,7 @@ function ProductBadge({ product, isHovered = false }: { product: Product; isHove
           </div>
           
           {/* Right: Country */}
-          <div className="flex items-center justify-center" style={{ fontSize: 12 }}>
+          <div className="flex items-center justify-center" style={{ fontSize: 10, letterSpacing: '0.05em' }}>
             {product.country.toUpperCase()}
           </div>
         </div>
@@ -173,7 +218,7 @@ function ProductBadge({ product, isHovered = false }: { product: Product; isHove
         {/* Row 3: Altitude - flex: 1 to stretch equally */}
         <div 
           className="flex flex-col items-center justify-center"
-          style={{ flex: 1, fontSize: 12, lineHeight: 1.1 }}
+          style={{ flex: 1, fontSize: 10, lineHeight: 1.1, letterSpacing: '0.05em' }}
         >
           <span>{product.altitude}</span>
           <span>METERS</span>
@@ -187,11 +232,22 @@ function ProductCard({ product }: { product: Product }) {
   const [expanded, setExpanded] = useState(false)
   const [isHovered, setIsHovered] = useState(false)
   const [isButtonHovered, setIsButtonHovered] = useState(false)
+  const [isMobile, setIsMobile] = useState(true) // Default to mobile to avoid flash
   const { addToCart } = useDrawer()
+
+  useEffect(() => {
+    const checkMobile = () => setIsMobile(window.innerWidth < 640)
+    checkMobile()
+    window.addEventListener('resize', checkMobile)
+    return () => window.removeEventListener('resize', checkMobile)
+  }, [])
 
   // Dynamic colors based on product
   const badgeContainerDefault = lightenColor(product.primaryColor, 90)
   const badgeContainerHover = product.hoverColor
+  
+  // Only apply hover effects on non-mobile
+  const showHoverEffects = isHovered && !isMobile
   
   // Button colors: darken further when button itself is hovered
   const buttonBgColor = isButtonHovered 
@@ -202,37 +258,33 @@ function ProductCard({ product }: { product: Product }) {
 
   return (
     <div 
-      className="flex-1 flex flex-col transition-colors duration-300 cursor-pointer"
+      className={`flex-1 flex flex-col transition-colors duration-300 cursor-pointer ${layout.card.padding} border-0 sm:border ${layout.card.gap}`}
       style={{ 
-        border: "0.5px solid rgba(0, 0, 0, 0.15)",
+        borderColor: "rgba(0, 0, 0, 0.15)",
         height: "auto",
-        padding: 24,
-        gap: 24,
-        background: isHovered ? product.cardHoverColor : "transparent"
+        background: showHoverEffects ? product.cardHoverColor : "transparent"
       }}
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
     >
       {/* Oval Badge - flexible container that maintains aspect ratio (315:246 from Figma) */}
       <div 
-        className="w-full flex items-center justify-center transition-colors duration-300"
+        className="w-full flex items-center justify-center transition-colors duration-300 p-6 sm:p-10"
         style={{ 
-          background: isHovered ? badgeContainerHover : badgeContainerDefault, 
-          paddingTop: 32,
-          paddingBottom: 32,
-          paddingLeft: 24,
-          paddingRight: 24
+          background: isMobile ? badgeContainerHover : (showHoverEffects ? badgeContainerHover : badgeContainerDefault), 
         }}
       >
-        <div style={{ width: '100%', maxWidth: 350, aspectRatio: '315 / 246' }}>
-          <ProductBadge product={product} isHovered={isHovered} />
+        <div style={{ width: '100%', maxWidth: 350 }}>
+          <ResponsiveBadgeWrapper>
+            <ProductBadge product={product} isHovered={isHovered} />
+          </ResponsiveBadgeWrapper>
         </div>
       </div>
 
-      {/* Content Grid - 2 columns */}
-      <div className="grid grid-cols-2" style={{ gap: 16 }}>
+      {/* Content Grid - 1 column on mobile, 2 on tablet+ */}
+      <div className={`grid grid-cols-1 sm:grid-cols-2 ${layout.gap.sm.class}`}>
                     {/* Title & Price - spans both columns */}
-                    <div className="col-span-2 flex items-center" style={{ gap: 16 }}>
+                    <div className={`col-span-1 sm:col-span-2 flex items-center ${layout.gap.sm.class}`}>
                       <h3 className="text-base font-bold uppercase" style={{ color: colors.olive.black }}>
                         {product.name}
                       </h3>
@@ -320,20 +372,16 @@ function ProductCard({ product }: { product: Product }) {
 export function ProductSection() {
   return (
     <section 
-      className="w-full"
+      className={`w-full ${layout.section.wrapper}`}
       style={{ 
         background: "#F4F1E8",
         fontFamily: "'Helvetica Neue', 'Arial', sans-serif",
-        paddingTop: 64,
-        paddingBottom: 64,
-        paddingLeft: 24,
-        paddingRight: 24
       }}
     >
       {/* Header */}
-      <div className="flex items-center justify-center" style={{ paddingBottom: 64 }}>
+      <div className={`flex items-center justify-center ${layout.section.headerBottom}`}>
         <h2 
-          className="text-2xl md:text-3xl lg:text-4xl font-bold uppercase text-center max-w-2xl"
+          className="text-xl sm:text-2xl md:text-3xl lg:text-4xl font-bold uppercase text-center max-w-2xl"
           style={{ color: colors.olive.black }}
         >
           <span>Pre-orders </span>
@@ -343,7 +391,7 @@ export function ProductSection() {
       </div>
 
       {/* Product Cards */}
-      <div className="flex flex-col lg:flex-row gap-6">
+      <div className={`flex flex-col lg:flex-row ${layout.grid.gap}`}>
         {products.map((product) => (
           <ProductCard key={product.id} product={product} />
         ))}

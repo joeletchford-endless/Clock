@@ -6,6 +6,7 @@ import gsap from "gsap"
 import { AnimatedLink } from "./animated-link"
 import { useDrawer } from "./drawer-context"
 import { colors } from "@/lib/colors"
+import { layout } from "@/lib/layout"
 
 interface NavigationProps {
   variant?: "light" | "dark"
@@ -89,7 +90,7 @@ export function Navigation({ variant = "light" }: NavigationProps) {
         style={{ background: bgColor }}
       >
         <nav 
-          className="w-full flex items-center justify-between px-6 relative"
+          className={`w-full flex items-center justify-between ${layout.padding.x.class} relative`}
           style={{ 
             fontFamily: "'Helvetica Neue', 'Arial', sans-serif",
             height: 55
@@ -98,14 +99,14 @@ export function Navigation({ variant = "light" }: NavigationProps) {
           {/* Logo / Brand */}
           <Link href="/" className="flex flex-col" style={{ gap: 0 }}>
             <span 
-              className="text-base font-medium uppercase"
-              style={{ color: primaryColor, lineHeight: "18px" }}
+              className="text-sm sm:text-base font-medium uppercase"
+              style={{ color: primaryColor, lineHeight: "16px" }}
             >
               Endless Coffee
             </span>
             <span 
-              className="text-base font-medium uppercase"
-              style={{ color: secondaryColor, lineHeight: "18px" }}
+              className="text-sm sm:text-base font-medium uppercase"
+              style={{ color: secondaryColor, lineHeight: "16px" }}
             >
               Roasting Company
             </span>
@@ -135,7 +136,7 @@ export function Navigation({ variant = "light" }: NavigationProps) {
             className="inline-block"
           >
             <span 
-              className="group relative inline-block overflow-hidden text-base font-medium uppercase tracking-wider"
+              className="group relative inline-block overflow-hidden text-sm sm:text-base font-medium uppercase tracking-wider"
               style={{ height: "1.25em" }}
             >
               <span className="flex flex-col transition-transform duration-300 ease-out transform group-hover:-translate-y-1/2">
@@ -152,7 +153,7 @@ export function Navigation({ variant = "light" }: NavigationProps) {
           className="overflow-hidden"
           style={{ height: 0, opacity: 0 }}
         >
-          <div className="px-6 pb-6">
+          <div className={`${layout.padding.x.class} pb-4 sm:pb-6`}>
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
             {paragraphs.map((text, index) => (
               <p 
