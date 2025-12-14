@@ -4,48 +4,117 @@
 
 @layer base {
   :root {
-    --background: 0 0% 100%;
-    --foreground: 222.2 84% 4.9%;
-    --card: 0 0% 100%;
-    --card-foreground: 222.2 84% 4.9%;
-    --popover: 0 0% 100%;
-    --popover-foreground: 222.2 84% 4.9%;
-    --primary: 221.2 83.2% 53.3%;
-    --primary-foreground: 210 40% 98%;
-    --secondary: 210 40% 96.1%;
-    --secondary-foreground: 222.2 47.4% 11.2%;
-    --muted: 210 40% 96.1%;
-    --muted-foreground: 215.4 16.3% 46.9%;
-    --accent: 210 40% 96.1%;
-    --accent-foreground: 222.2 47.4% 11.2%;
-    --destructive: 0 84.2% 60.2%;
-    --destructive-foreground: 210 40% 98%;
-    --border: 214.3 31.8% 91.4%;
-    --input: 214.3 31.8% 91.4%;
-    --ring: 221.2 83.2% 53.3%;
+    /* ============================================
+       ENDLESS COFFEE COLOR TOKEN SYSTEM
+       ============================================ */
+    
+    /* --- CORAL (Warm Accent) --- */
+    --coral: #E07A5F;
+    --coral-light: #F2AFA0;      /* 30% lighter */
+    --coral-lighter: #FAD9D1;    /* 60% lighter */
+    --coral-mid: #C4614A;        /* 15% darker */
+    --coral-dark: #A84835;       /* 30% darker */
+    
+    /* --- LIME (Energy) --- */
+    --lime: #C5D92D;
+    --lime-light: #DBEA6E;       /* 30% lighter */
+    --lime-lighter: #EEF5B5;     /* 60% lighter */
+    --lime-mid: #A8B926;         /* 15% darker */
+    --lime-dark: #859509;        /* 30% darker - AA accessible */
+    
+    /* --- EUCALYPTUS (Cool Balance) --- */
+    --eucalyptus: #8FA6A0;
+    --eucalyptus-light: #B5C5C1; /* 30% lighter */
+    --eucalyptus-lighter: #DAE4E1; /* 60% lighter */
+    --eucalyptus-mid: #728B84;   /* 15% darker */
+    --eucalyptus-dark: #576E68;  /* 30% darker */
+    
+    /* --- BACKGROUNDS --- */
+    --bg-primary: #F4F1E8;       /* Warm off-white */
+    --bg-secondary: #D9CBB8;     /* Clay beige */
+    --bg-tertiary: #EBE8DF;      /* Between primary and secondary */
+    
+    /* --- GREENS (Nature Spectrum) --- */
+    --leaf: #6F8F4A;             /* Muted leaf green */
+    --leaf-light: #9AB87A;       /* 30% lighter */
+    --leaf-lighter: #C5DBB0;     /* 60% lighter */
+    --leaf-mid: #5C783D;         /* 15% darker */
+    --leaf-dark: #4A6130;        /* 30% darker */
+    
+    --teal: #4E6A63;             /* Deep green-teal */
+    --teal-light: #7A9A92;       /* 30% lighter */
+    --teal-lighter: #A9C2BC;     /* 60% lighter */
+    --teal-mid: #3F5650;         /* 15% darker */
+    --teal-dark: #31433E;        /* 30% darker */
+    
+    /* --- TEXT & GROUNDING --- */
+    --olive-black: #2F3324;      /* Near-black olive (primary text) */
+    --olive-mid: #4A5139;        /* Mid olive (secondary text) */
+    --olive-light: #6B7355;      /* Light olive (tertiary text) */
+    
+    /* --- SEMANTIC TOKENS --- */
+    --text-primary: var(--olive-black);
+    --text-secondary: var(--olive-mid);
+    --text-tertiary: var(--olive-light);
+    --text-inverse: var(--bg-primary);
+    
+    --surface-primary: var(--bg-primary);
+    --surface-secondary: var(--bg-secondary);
+    --surface-dark: var(--olive-black);
+    
+    --accent-warm: var(--coral);
+    --accent-energy: var(--lime);
+    --accent-cool: var(--eucalyptus);
+    --accent-nature: var(--leaf);
+    --accent-structure: var(--teal);
+    
+    --border-light: rgba(47, 51, 36, 0.1);
+    --border-mid: rgba(47, 51, 36, 0.2);
+    --border-dark: rgba(47, 51, 36, 0.4);
+    
+    /* --- LEGACY TOKENS (for compatibility) --- */
+    --background: 44 23% 93%;
+    --foreground: 70 22% 17%;
+    --card: 44 23% 93%;
+    --card-foreground: 70 22% 17%;
+    --popover: 44 23% 93%;
+    --popover-foreground: 70 22% 17%;
+    --primary: 70 22% 17%;
+    --primary-foreground: 44 23% 93%;
+    --secondary: 34 24% 79%;
+    --secondary-foreground: 70 22% 17%;
+    --muted: 34 24% 79%;
+    --muted-foreground: 70 15% 40%;
+    --accent: 68 67% 51%;
+    --accent-foreground: 70 22% 17%;
+    --destructive: 11 63% 63%;
+    --destructive-foreground: 44 23% 93%;
+    --border: 34 24% 79%;
+    --input: 34 24% 79%;
+    --ring: 68 67% 51%;
     --radius: 0.5rem;
   }
 
   .dark {
-    --background: 222.2 84% 4.9%;
-    --foreground: 210 40% 98%;
-    --card: 222.2 84% 4.9%;
-    --card-foreground: 210 40% 98%;
-    --popover: 222.2 84% 4.9%;
-    --popover-foreground: 210 40% 98%;
-    --primary: 217.2 91.2% 59.8%;
-    --primary-foreground: 222.2 47.4% 11.2%;
-    --secondary: 217.2 32.6% 17.5%;
-    --secondary-foreground: 210 40% 98%;
-    --muted: 217.2 32.6% 17.5%;
-    --muted-foreground: 215 20.2% 65.1%;
-    --accent: 217.2 32.6% 17.5%;
-    --accent-foreground: 210 40% 98%;
-    --destructive: 0 62.8% 30.6%;
-    --destructive-foreground: 210 40% 98%;
-    --border: 217.2 32.6% 17.5%;
-    --input: 217.2 32.6% 17.5%;
-    --ring: 224.3 76.3% 48%;
+    --background: 70 22% 17%;
+    --foreground: 44 23% 93%;
+    --card: 70 22% 17%;
+    --card-foreground: 44 23% 93%;
+    --popover: 70 22% 17%;
+    --popover-foreground: 44 23% 93%;
+    --primary: 44 23% 93%;
+    --primary-foreground: 70 22% 17%;
+    --secondary: 168 15% 36%;
+    --secondary-foreground: 44 23% 93%;
+    --muted: 168 15% 36%;
+    --muted-foreground: 168 12% 65%;
+    --accent: 68 67% 51%;
+    --accent-foreground: 70 22% 17%;
+    --destructive: 11 63% 45%;
+    --destructive-foreground: 44 23% 93%;
+    --border: 168 15% 36%;
+    --input: 168 15% 36%;
+    --ring: 68 67% 51%;
   }
 }
 

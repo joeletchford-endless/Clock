@@ -107,7 +107,7 @@ export function TimeClock() {
               key={`weekday-${i}`}
               fontSize="36"
               fontWeight="700"
-              fill={isActive ? "#00FF6F" : "rgba(255,255,255,0.4)"}
+              fill={isActive ? "#C5D92D" : "rgba(255,255,255,0.4)"}
             >
               <textPath
                 href="#timeClockInnerCircle"
@@ -128,7 +128,7 @@ export function TimeClock() {
             y1={center}
             x2={center}
             y2={center - outerRadius + 50}
-            stroke="#00FF6F"
+            stroke="#C5D92D"
             strokeWidth="4"
             strokeLinecap="butt"
             transform={`rotate(${secondDeg} ${center} ${center})`}
@@ -172,7 +172,7 @@ export function TimeClock() {
             cx={center}
             cy={center}
             r="6"
-            fill="#00FF6F"
+            fill="#C5D92D"
           />
         </g>
       </svg>

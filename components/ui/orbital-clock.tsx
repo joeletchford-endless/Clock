@@ -1,6 +1,7 @@
 "use client"
 
 import { useState, useEffect } from "react"
+import { colors } from "@/lib/colors"
 
 export function OrbitalClock() {
   const [time, setTime] = useState(new Date())
@@ -63,10 +64,11 @@ export function OrbitalClock() {
 
   return (
     <div
-      className="relative select-none text-white"
+      className="relative select-none"
       style={{
         width: size,
-        height: size
+        height: size,
+        color: colors.olive.black
       }}
     >
 
@@ -134,7 +136,7 @@ export function OrbitalClock() {
                 key={`day-${day}`}
                 fontSize="36"
                 fontWeight="700"
-                fill={isActive ? "#ffffff" : "rgba(255,255,255,0.6)"}
+                fill={colors.olive.black}
               >
                 <textPath
                   href="#outerCircle"
@@ -165,7 +167,7 @@ export function OrbitalClock() {
                 y={y}
                 fontSize="36"
                 fontWeight="700"
-                fill={isActive ? "#00FF6F" : "rgba(255,255,255,0.5)"}
+                fill={isActive ? colors.coral.DEFAULT : colors.olive.black}
                 textAnchor="middle"
                 dominantBaseline="middle"
                 transform={`rotate(${textRotation} ${x} ${y})`}
@@ -178,25 +180,25 @@ export function OrbitalClock() {
 
           {/* Clock hands */}
           <g>
-            {/* LONG HAND - Points to Days of Month (outer ring) - White */}
+            {/* LONG HAND - Points to Days of Month (outer ring) - Olive */}
             <line
               x1={center}
               y1={center}
               x2={center}
               y2={center - outerRadius + 30}
-              stroke="#ffffff"
+              stroke={colors.olive.black}
               strokeWidth="4"
               strokeLinecap="butt"
               transform={`rotate(${dayOfMonthDeg} ${center} ${center})`}
             />
 
-            {/* MEDIUM HAND - Points to Months (middle ring) - Green */}
+            {/* MEDIUM HAND - Points to Months (middle ring) - Coral */}
             <line
               x1={center}
               y1={center}
               x2={center}
               y2={center - middleRadius + 30}
-              stroke="#00FF6F"
+              stroke={colors.coral.DEFAULT}
               strokeWidth="6"
               strokeLinecap="butt"
               transform={`rotate(${monthDeg} ${center} ${center})`}
@@ -207,7 +209,7 @@ export function OrbitalClock() {
               cx={center}
               cy={center}
               r="14"
-              fill="white"
+              fill={colors.olive.black}
               strokeWidth="3"
             />
 
@@ -216,7 +218,7 @@ export function OrbitalClock() {
               cx={center}
               cy={center}
               r="6"
-              fill="#00FF6F"
+              fill={colors.coral.DEFAULT}
             />
           </g>
         </svg>

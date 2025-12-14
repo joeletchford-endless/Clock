@@ -1,6 +1,7 @@
 "use client"
 
 import Link from "next/link"
+import { colors } from "@/lib/colors"
 
 interface AnimatedLinkProps {
   href: string
@@ -15,8 +16,8 @@ export function AnimatedLink({
   href, 
   children, 
   className = "",
-  defaultColor = "rgba(244, 244, 237, 0.7)",
-  hoverColor = "#f4f4ed",
+  defaultColor = colors.olive.black,
+  hoverColor = colors.coral.DEFAULT,
   external = false
 }: AnimatedLinkProps) {
   const linkProps = external 

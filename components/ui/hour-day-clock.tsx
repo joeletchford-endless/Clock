@@ -1,6 +1,7 @@
 "use client"
 
 import { useState, useEffect } from "react"
+import { colors } from "@/lib/colors"
 
 export function HourDayClock() {
   const [time, setTime] = useState(new Date())
@@ -43,10 +44,11 @@ export function HourDayClock() {
 
   return (
     <div
-      className="relative select-none text-white"
+      className="relative select-none"
       style={{
         width: size,
-        height: size
+        height: size,
+        color: colors.olive.black
       }}
     >
       {/* SVG Clock Face */}
@@ -89,7 +91,7 @@ export function HourDayClock() {
               y={y}
               fontSize="36"
               fontWeight="700"
-              fill="rgba(255,255,255,0.6)"
+              fill={colors.olive.black}
               textAnchor="middle"
               dominantBaseline="middle"
               transform={`rotate(${textRotation} ${x} ${y})`}
@@ -110,7 +112,7 @@ export function HourDayClock() {
               key={`weekday-${i}`}
               fontSize="36"
               fontWeight="700"
-              fill={isActive ? "#00FF6F" : "rgba(255,255,255,0.4)"}
+              fill={isActive ? colors.coral.DEFAULT : colors.olive.black}
             >
               <textPath
                 href="#hourDayInnerCircle"
@@ -125,37 +127,37 @@ export function HourDayClock() {
 
         {/* Clock hands */}
         <g>
-          {/* LONG HAND - Minutes - White */}
+          {/* LONG HAND - Minutes - Olive */}
           <line
             x1={center}
             y1={center}
             x2={center}
             y2={center - outerRadius + 30}
-            stroke="#ffffff"
+            stroke={colors.olive.black}
             strokeWidth="4"
             strokeLinecap="butt"
             transform={`rotate(${minuteDeg} ${center} ${center})`}
           />
 
-          {/* SHORT HAND - Hours - White */}
+          {/* SHORT HAND - Hours - Olive */}
           <line
             x1={center}
             y1={center}
             x2={center}
             y2={center - innerRadius + 30}
-            stroke="white"
+            stroke={colors.olive.black}
             strokeWidth="6"
             strokeLinecap="butt"
             transform={`rotate(${hourDeg} ${center} ${center})`}
           />
 
-          {/* SHORTEST HAND - Points to Day of Week (inner ring) - Green */}
+          {/* SHORTEST HAND - Points to Day of Week (inner ring) - Coral */}
           <line
             x1={center}
             y1={center}
             x2={center}
             y2={center - innerRadius + 80}
-            stroke="#00FF6F"
+            stroke={colors.coral.DEFAULT}
             strokeWidth="6"
             strokeLinecap="butt"
             transform={`rotate(${dayOfWeekDeg} ${center} ${center})`}
@@ -166,7 +168,7 @@ export function HourDayClock() {
             cx={center}
             cy={center}
             r="14"
-            fill="white"
+            fill={colors.olive.black}
             strokeWidth="3"
           />
 
@@ -175,7 +177,7 @@ export function HourDayClock() {
             cx={center}
             cy={center}
             r="6"
-            fill="#00FF6F"
+            fill={colors.coral.DEFAULT}
           />
         </g>
       </svg>

@@ -4,6 +4,7 @@ import { useState, useRef, useEffect } from "react"
 import { OrbitalClock } from "./orbital-clock"
 import { HourDayClock } from "./hour-day-clock"
 import { AnimatedLink } from "./animated-link"
+import { colors } from "@/lib/colors"
 
 // Responsive clock wrapper that scales content to fit container
 function ResponsiveClockWrapper({ children }: { children: React.ReactNode }) {
@@ -94,8 +95,8 @@ function CenterClockElement() {
               key={`tick-${i}`}
               fontSize="36"
               fontWeight="600"
-              fill="white"
-              opacity={0.8}
+              fill={colors.olive.black}
+              opacity={0.6}
             >
               <textPath
                 href="#centerTickCircle"
@@ -117,7 +118,7 @@ function CenterClockElement() {
         <p 
           className="font-bold uppercase tracking-[0.02em] text-center"
           style={{ 
-            color: "#ffffff",
+            color: colors.olive.black,
             fontFamily: "'Helvetica Neue', 'Arial', sans-serif",
             fontSize: 36,
             lineHeight: '36px'
@@ -153,7 +154,7 @@ export function FooterSection() {
     <footer 
       className="w-full flex flex-col"
       style={{ 
-        background: "#000000",
+        background: colors.bg.primary,
         fontFamily: "'Helvetica Neue', 'Arial', sans-serif",
         paddingLeft: 24,
         paddingRight: 24
@@ -189,21 +190,21 @@ export function FooterSection() {
       >
         {/* Address + Copyright (cols 1-2) */}
         <div className="col-span-2 md:col-span-2 flex flex-col justify-between text-sm leading-relaxed">
-          <div style={{ color: "#f4f4ed" }}>
+          <div style={{ color: colors.olive.black }}>
             <p>1024 9th Ave,</p>
             <p>Oakland, CA 94606</p>
           </div>
-          <p className="mt-4 md:mt-0" style={{ color: "rgba(244, 244, 237, 0.35)" }}>
+          <p className="mt-4 md:mt-0" style={{ color: colors.olive.light }}>
             © 2025 Endless Coffee Co.
           </p>
         </div>
 
         {/* Tagline (cols 3-5) */}
-        <div className="col-span-2 md:col-span-3 text-sm leading-relaxed" style={{ color: "#f2f2f7" }}>
+        <div className="col-span-2 md:col-span-3 text-sm leading-relaxed">
           <p>
-            <span style={{ color: "#f4f4ed" }}>Endless is </span>
-            <span style={{ color: "rgba(244, 244, 237, 0.5)" }}>the hope that our passion resonates with anyone who values</span>
-            <span style={{ color: "#f4f4ed" }}> coffee made with care.</span>
+            <span style={{ color: colors.olive.black }}>Endless is </span>
+            <span style={{ color: colors.olive.light }}>the hope that our passion resonates with anyone who values</span>
+            <span style={{ color: colors.olive.black }}> coffee made with care.</span>
           </p>
         </div>
 
@@ -212,28 +213,35 @@ export function FooterSection() {
 
         {/* Email Signup (cols 7-10) */}
         <div className="col-span-2 md:col-span-4 flex flex-col gap-1">
-          <p className="text-sm leading-relaxed" style={{ color: "rgba(244, 244, 237, 0.5)" }}>
+          <p className="text-sm leading-relaxed" style={{ color: colors.olive.light }}>
             Sign up for our email list and know when new drops are coming
           </p>
           <form onSubmit={handleSubmit}>
             <button 
               type="submit"
-              className="text-sm hover:opacity-70 transition-opacity text-left"
-              style={{ color: "#f4f4ed" }}
+              className="text-sm text-left group relative inline-block overflow-hidden"
+              style={{ height: "1.25em" }}
             >
-              {submitted ? "Thanks!" : isSubmitting ? "..." : "Submit"}
+              <span className="flex flex-col transition-transform duration-300 ease-out transform group-hover:-translate-y-1/2">
+                <span style={{ color: colors.olive.black }}>
+                  {submitted ? "Thanks!" : isSubmitting ? "..." : "Submit"}
+                </span>
+                <span style={{ color: colors.coral.DEFAULT }}>
+                  {submitted ? "Thanks!" : isSubmitting ? "..." : "Submit"}
+                </span>
+              </span>
             </button>
           </form>
         </div>
 
         {/* Links (cols 11-12) */}
         <div className="col-span-2 md:col-span-2 flex gap-6 justify-end">
-          <div className="flex flex-col gap-1 text-sm" style={{ color: "#f4f4ed" }}>
+          <div className="flex flex-col gap-1 text-sm">
             <AnimatedLink href="https://instagram.com/endlesscoffee_co" className="text-sm" external>Instagram</AnimatedLink>
             <AnimatedLink href="https://www.roastwith444.com/" className="text-sm" external>444</AnimatedLink>
             <AnimatedLink href="#" className="text-sm">Contact</AnimatedLink>
           </div>
-          <div className="flex flex-col gap-1 text-sm" style={{ color: "#f4f4ed" }}>
+          <div className="flex flex-col gap-1 text-sm">
             <AnimatedLink href="https://instagram.com/endlesscoffee_co" className="text-sm" external>Instagram</AnimatedLink>
             <AnimatedLink href="#" className="text-sm">Substack</AnimatedLink>
             <AnimatedLink href="#" className="text-sm">Contact</AnimatedLink>
