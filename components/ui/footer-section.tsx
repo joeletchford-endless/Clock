@@ -181,68 +181,70 @@ export function FooterSection() {
         </ResponsiveClockWrapper>
       </div>
 
-      {/* Bottom Content - 12 Column Grid */}
+      {/* Bottom Content - 2 column on mobile/tablet, 12 column grid on desktop */}
       <div 
-        className={`w-full grid grid-cols-2 sm:grid-cols-4 md:grid-cols-12 ${layout.grid.gap} ${layout.space.md}`}
+        className="w-full flex md:grid md:grid-cols-12 py-4 sm:py-6"
+        style={{ gap: 24 }}
       >
-        {/* Address + Copyright (cols 1-2) */}
-        <div className="col-span-2 md:col-span-2 flex flex-col justify-between text-sm leading-relaxed">
-          <div style={{ color: colors.olive.black }}>
-            <p>1024 9th Ave,</p>
-            <p>Oakland, CA 94606</p>
+        {/* Left Column - Content (mobile/tablet) / spans cols 1-10 on desktop */}
+        <div className="flex-1 md:col-span-10 flex flex-col md:flex-row md:justify-between gap-4 md:gap-6">
+          {/* Tagline */}
+          <div className="md:flex-1" style={{ fontSize: 14, lineHeight: 1.1 }}>
+            <p>
+              <span style={{ color: colors.olive.black }}>Endless is </span>
+              <span style={{ color: colors.olive.light }}>the hope that our passion resonates with anyone who values</span>
+              <span style={{ color: colors.olive.black }}> coffee made with care.</span>
+            </p>
           </div>
-          <p className="mt-4 md:mt-0" style={{ color: colors.olive.light }}>
-            © 2025 Endless Coffee Co.
-          </p>
-        </div>
 
-        {/* Tagline (cols 3-5) */}
-        <div className="col-span-2 md:col-span-3 text-sm leading-relaxed">
-          <p>
-            <span style={{ color: colors.olive.black }}>Endless is </span>
-            <span style={{ color: colors.olive.light }}>the hope that our passion resonates with anyone who values</span>
-            <span style={{ color: colors.olive.black }}> coffee made with care.</span>
-          </p>
-        </div>
-
-        {/* Spacer for mobile */}
-        <div className="hidden md:block md:col-span-1" />
-
-        {/* Email Signup (cols 7-10) */}
-        <div className="col-span-2 md:col-span-4 flex flex-col gap-1">
-          <p className="text-sm leading-relaxed" style={{ color: colors.olive.light }}>
-            Sign up for our email list and know when new drops are coming
-          </p>
-          <form onSubmit={handleSubmit}>
-            <button 
-              type="submit"
-              className="text-sm text-left group relative inline-block overflow-hidden"
-              style={{ height: "1.25em" }}
-            >
-              <span className="flex flex-col transition-transform duration-300 ease-out transform group-hover:-translate-y-1/2">
-                <span style={{ color: colors.olive.black }}>
-                  {submitted ? "Thanks!" : isSubmitting ? "..." : "Submit"}
+          {/* Email Signup */}
+          <div className="flex flex-col md:flex-1">
+            <form onSubmit={handleSubmit} className="flex items-baseline border-b" style={{ borderColor: colors.olive.light, paddingBottom: 4 }}>
+              <input
+                type="email"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                placeholder="Sign up for our email list"
+                className="bg-transparent outline-none flex-1"
+                style={{ 
+                  fontSize: 14, 
+                  lineHeight: 1.1,
+                  color: colors.olive.black,
+                }}
+              />
+              <button 
+                type="submit"
+                className="text-left group relative inline-block overflow-hidden"
+                style={{ fontSize: 14, lineHeight: 1.1, height: '1.1em' }}
+              >
+                <span className="flex flex-col transition-transform duration-300 ease-out transform group-hover:-translate-y-1/2">
+                  <span style={{ color: colors.olive.black }}>
+                    {submitted ? "Thanks!" : isSubmitting ? "..." : "Submit"}
+                  </span>
+                  <span style={{ color: colors.coral.DEFAULT }}>
+                    {submitted ? "Thanks!" : isSubmitting ? "..." : "Submit"}
+                  </span>
                 </span>
-                <span style={{ color: colors.coral.DEFAULT }}>
-                  {submitted ? "Thanks!" : isSubmitting ? "..." : "Submit"}
-                </span>
-              </span>
-            </button>
-          </form>
+              </button>
+            </form>
+          </div>
+
+          {/* Address + Copyright */}
+          <div className="md:flex-1" style={{ fontSize: 14, lineHeight: 1.1, color: colors.olive.light }}>
+            <p style={{ color: colors.olive.black }}>1024 9th Ave,</p>
+            <p style={{ color: colors.olive.black }}>Oakland, CA 94606</p>
+            <p style={{ color: colors.olive.light }}>© 2025 Endless Coffee Co.</p>
+          </div>
         </div>
 
-        {/* Links (cols 11-12) */}
-        <div className="col-span-2 md:col-span-2 flex gap-6 justify-start sm:justify-end">
-          <div className="flex flex-col gap-1 text-sm">
-            <AnimatedLink href="https://instagram.com/endlesscoffee_co" className="text-sm" external>Instagram</AnimatedLink>
-            <AnimatedLink href="https://www.roastwith444.com/" className="text-sm" external>444</AnimatedLink>
-            <AnimatedLink href="#" className="text-sm">Contact</AnimatedLink>
-          </div>
-          <div className="flex flex-col gap-1 text-sm">
-            <AnimatedLink href="https://instagram.com/endlesscoffee_co" className="text-sm" external>Instagram</AnimatedLink>
-            <AnimatedLink href="#" className="text-sm">Substack</AnimatedLink>
-            <AnimatedLink href="#" className="text-sm">Contact</AnimatedLink>
-          </div>
+        {/* Right Column - Links (single column on mobile, two columns on tablet+) */}
+        <div className="md:col-span-2 grid grid-cols-1 sm:grid-cols-2 text-sm" style={{ gap: 4 }}>
+          <AnimatedLink href="https://instagram.com/endlesscoffee_co" className="text-sm" external>Instagram</AnimatedLink>
+          <AnimatedLink href="https://www.roastwith444.com/" className="text-sm" external>444</AnimatedLink>
+          <AnimatedLink href="#" className="text-sm">Contact</AnimatedLink>
+          <AnimatedLink href="https://instagram.com/endlesscoffee_co" className="text-sm" external>Instagram</AnimatedLink>
+          <AnimatedLink href="#" className="text-sm">Substack</AnimatedLink>
+          <AnimatedLink href="#" className="text-sm">Contact</AnimatedLink>
         </div>
       </div>
     </footer>

@@ -229,7 +229,6 @@ function ProductBadge({ product, isHovered = false }: { product: Product; isHove
 }
 
 function ProductCard({ product }: { product: Product }) {
-  const [expanded, setExpanded] = useState(false)
   const [isHovered, setIsHovered] = useState(false)
   const [isButtonHovered, setIsButtonHovered] = useState(false)
   const [isMobile, setIsMobile] = useState(true) // Default to mobile to avoid flash
@@ -282,9 +281,9 @@ function ProductCard({ product }: { product: Product }) {
       </div>
 
       {/* Content Grid - 1 column on mobile, 2/3 + 1/3 on tablet+ */}
-      <div className="grid grid-cols-1 sm:grid-cols-3 p-0 sm:px-4" style={{ columnGap: 24, rowGap: 8 }}>
+      <div className="grid grid-cols-1 sm:grid-cols-3" style={{ columnGap: 24 }}>
                     {/* Title & Price - spans all columns */}
-                    <div className="col-span-1 sm:col-span-3 flex items-center" style={{ gap: 12 }}>
+                    <div className="col-span-1 sm:col-span-3 flex items-center pb-2" style={{ gap: 12 }}>
                       <h3 className="text-base font-bold uppercase" style={{ color: colors.olive.black }}>
                         {product.name}
                       </h3>
@@ -294,50 +293,33 @@ function ProductCard({ product }: { product: Product }) {
                     </div>
 
         {/* Left Column - Description (2/3) */}
-        <div className="flex flex-col sm:col-span-2" style={{ gap: 3 }}>
-          <div 
-            className="overflow-hidden"
-            style={{ 
-              maxHeight: expanded ? "500px" : "93px",
-              transition: "max-height 0.4s cubic-bezier(0.4, 0, 0.2, 1)",
-            }}
-          >
-                        <p 
-                          style={{ color: colors.olive.black, lineHeight: "1.1", fontSize: 14 }}
-                        >
-                          {product.details}
-                        </p>
-          </div>
-          <button 
-            onClick={() => setExpanded(!expanded)}
-            className="text-xs text-left hover:opacity-70 transition-opacity"
-            style={{ color: "rgba(0, 0, 0, 0.25)" }}
-          >
-            {expanded ? "Read less" : "Read more"}
-          </button>
+        <div className="sm:col-span-2">
+          <p style={{ color: colors.olive.black, lineHeight: "1.1", fontSize: 14, paddingBottom: 24 }}>
+            {product.details}
+          </p>
         </div>
 
         {/* Right Column - Specs Grid (1/3) */}
-        <div className="grid grid-cols-1 sm:col-span-1" style={{ gap: 8 }}>
+        <div className="grid grid-cols-2 sm:grid-cols-1 sm:col-span-1" style={{ gap: 8 }}>
                       <div className="flex flex-col" style={{ gap: 0, justifyContent: 'flex-start', alignItems: 'flex-start', height: 'fit-content' }}>
-                        <p className="text-xs" style={{ color: colors.olive.light }}>Process</p>
-                        <p className="text-xs" style={{ color: colors.olive.black }}>{product.process}</p>
+                        <p className="font-bold uppercase" style={{ color: colors.olive.black, fontSize: 12 }}>Process</p>
+                        <p style={{ color: colors.olive.black, fontSize: 14 }}>{product.process}</p>
                       </div>
                       <div className="flex flex-col" style={{ gap: 0, justifyContent: 'flex-start', alignItems: 'flex-start', height: 'fit-content' }}>
-                        <p className="text-xs" style={{ color: colors.olive.light }}>Taste Profile</p>
-                        <p className="text-xs" style={{ color: colors.olive.black }}>{product.tasteProfile}</p>
+                        <p className="font-bold uppercase" style={{ color: colors.olive.black, fontSize: 12 }}>Taste Profile</p>
+                        <p style={{ color: colors.olive.black, fontSize: 14 }}>{product.tasteProfile}</p>
                       </div>
                       <div className="flex flex-col" style={{ gap: 0, justifyContent: 'flex-start', alignItems: 'flex-start', height: 'fit-content' }}>
-                        <p className="text-xs" style={{ color: colors.olive.light }}>Producer</p>
-                        <p className="text-xs" style={{ color: colors.olive.black }}>{product.producer}</p>
+                        <p className="font-bold uppercase" style={{ color: colors.olive.black, fontSize: 12 }}>Producer</p>
+                        <p style={{ color: colors.olive.black, fontSize: 14 }}>{product.producer}</p>
                       </div>
                       <div className="flex flex-col" style={{ gap: 0, justifyContent: 'flex-start', alignItems: 'flex-start', height: 'fit-content' }}>
-                        <p className="text-xs" style={{ color: colors.olive.light }}>Variety</p>
-                        <p className="text-xs" style={{ color: colors.olive.black }}>{product.variety}</p>
+                        <p className="font-bold uppercase" style={{ color: colors.olive.black, fontSize: 12 }}>Variety</p>
+                        <p style={{ color: colors.olive.black, fontSize: 14 }}>{product.variety}</p>
                       </div>
                       <div className="flex flex-col" style={{ gap: 0, justifyContent: 'flex-start', alignItems: 'flex-start', height: 'fit-content' }}>
-                        <p className="text-xs" style={{ color: colors.olive.light }}>Altitude</p>
-                        <p className="text-xs" style={{ color: colors.olive.black }}>{product.altitude} m</p>
+                        <p className="font-bold uppercase" style={{ color: colors.olive.black, fontSize: 12 }}>Altitude</p>
+                        <p style={{ color: colors.olive.black, fontSize: 14 }}>{product.altitude} m</p>
                       </div>
         </div>
       </div>
